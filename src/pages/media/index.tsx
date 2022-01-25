@@ -1,11 +1,22 @@
 
 import { Breadcrumb, Button, Layout, Table } from 'antd';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import MenuCollapsible from '../../components/menu/Index';
+import { fetchAllMedia } from '../../store/features/media/Index';
+import { RootState } from '../../store/store';
 
 
 const { Header, Content, Footer } = Layout;
 
 function MediaPage() {
+
+	const mediaStore = useSelector((state: RootState) => state.media)
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(fetchAllMedia())
+	},[])
 
 	const mediaQueryColumns = [
 		{
@@ -59,7 +70,7 @@ function MediaPage() {
 					</div>
 					<div style={{ margin: '15px'}}>
 						Lista de reprodução:
-						<Table columns={mediaQueryColumns} />
+						<Table columns={mediaQueryColumns} loading={mediaStore.loading} dataSource={mediaStore.medias}/>
 					</div>
 					<div style={{ margin: '15px'}}>
 						Arquivos:
