@@ -5,5 +5,10 @@ export interface media {
 	name: string,
 	filePath: string,
 	fileType: string,
-	playing: boolean
+	playing: number
+}
+
+export interface simpleMedia {
+	id: number,
+	name: string
 }
