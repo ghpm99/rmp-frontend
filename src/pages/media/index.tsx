@@ -9,7 +9,7 @@ import { RootState } from '../../store/store';
 
 const { Header, Content, Footer } = Layout;
 
-function MediaPage() {
+function MediaPage(props) {
 
 	const mediaStore = useSelector((state: RootState) => state.media)
 	const dispatch = useDispatch()
@@ -17,7 +17,7 @@ function MediaPage() {
 	useEffect(() => {
 		dispatch(fetchAllMedia())
 		dispatch(fetchMediaPlaying())
-	},[])
+	}, [])
 
 	const mediaQueryColumns = [
 		{
@@ -56,36 +56,36 @@ function MediaPage() {
 			<Layout>
 				<Header style={ { padding: 0 } } />
 				<Content>
-					<Breadcrumb style={{ margin: '16px 16px' }}>
+					<Breadcrumb style={ { margin: '16px 16px' } }>
 						<Breadcrumb.Item>RMP</Breadcrumb.Item>
 						<Breadcrumb.Item>Media</Breadcrumb.Item>
 					</Breadcrumb>
-					<div style={{ margin: '0 13px'}}>
+					<div style={ { margin: '0 13px' } }>
 						Solicitar Media tela:
-						<Button type='primary' style={{ margin: '13px'}}>
+						<Button type='primary' style={ { margin: '13px' } }>
 							Alterar tela
 						</Button>
 					</div>
-					<div style={{ margin: '0 15px'}}>
-						Media em reprodução: {mediaStore.mediaPlaying?.name}
+					<div style={ { margin: '0 15px' } }>
+						Media em reprodução: { mediaStore.mediaPlaying?.name }
 					</div>
-					<div style={{ margin: '15px'}}>
+					<div style={ { margin: '15px' } }>
 						Lista de reprodução:
 						<Table
-							columns={mediaQueryColumns}
-							loading={mediaStore.loading}
-							dataSource={mediaStore.medias}
+							columns={ mediaQueryColumns }
+							loading={ mediaStore.loading }
+							dataSource={ mediaStore.medias }
 						/>
 					</div>
-					<div style={{ margin: '15px'}}>
+					<div style={ { margin: '15px' } }>
 						Arquivos:
-						<Table columns={filesColumns} />
+						<Table columns={ filesColumns } />
 					</div>
-					<Button type='primary' style={{ margin: '15px'}}>Adicionar</Button>
-					<div style={{ margin: '15px'}}>
+					<Button type='primary' style={ { margin: '15px' } }>Adicionar</Button>
+					<div style={ { margin: '15px' } }>
 						Controles:
-						<Button type='default' style={{ margin: '5px' }}>Play</Button>
-						<Button type='default' style={{ margin: '5px' }}>Pause</Button>
+						<Button type='default' style={ { margin: '5px' } }>Play</Button>
+						<Button type='default' style={ { margin: '5px' } }>Pause</Button>
 					</div>
 				</Content>
 				<Footer style={ { textAlign: 'center' } }>Copyright 2022. All Rights Reserved.</Footer>
@@ -93,6 +93,16 @@ function MediaPage() {
 		</Layout>
 
 	)
+}
+
+export async function getServerSideProps() {
+	const props = {
+		pusher_appId: process.env.PUSHER_APP_ID,
+		pusher_key: process.env.PUSHER_KEY,
+		pusher_secret: process.env.PUSHER_SECRET,
+		pusher_cluster: process.env.PUSHER_CLUSTER
+	}
+	return { props }
 }
 
 export default MediaPage

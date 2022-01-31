@@ -2,7 +2,7 @@
   "name": "rmp-frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3500",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -10,6 +10,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1",
     "antd": "^4.18.3",
+    "axios": "^0.25.0",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
