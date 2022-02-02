@@ -1,15 +1,18 @@
+import axios from 'axios'
 import { pagination } from '../types/commonTypes'
 import { media } from '../types/mediaTypes'
 
-const url = process.env.NEXT_PUBLIC_API_URL + '/media/'
+const apiMedia = axios.create({
+	baseURL: process.env.NEXT_PUBLIC_API_URL + '/media/'
+})
 
 interface allMediaRequest extends pagination {
 	data: media[]
 }
 
 export async function fetchAllMediaService() {
-	const response = await fetch(`${url}get-media`)
-	const data = (await response.json()) as allMediaRequest
+	const response = await apiMedia.get(`get-media`)
+	const data = (await response.data) as allMediaRequest
 	return data
 }
 
@@ -19,7 +22,7 @@ interface playingMediaResponse {
 }
 
 export async function fetchPlayingMediaService() {
-	const response = await fetch(`${url}get-media-playing`)
-	const data = (await response.json()) as playingMediaResponse
+	const response = await apiMedia.get(`get-media-playing`)
+	const data = (await response.data) as playingMediaResponse
 	return data
 }

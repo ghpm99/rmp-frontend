@@ -2,6 +2,7 @@
 
 import { Breadcrumb, Layout, Button, Table, Form, Input } from 'antd';
 import MenuCollapsible from '../../../components/menu/Index';
+import { changeScreenYoutube } from '../../../services/youtubeService';
 
 function YoutubePage() {
 	const { Header, Content, Footer } = Layout;
@@ -26,6 +27,10 @@ function YoutubePage() {
 		}
 	]
 
+	const changeScreen = () => {
+		changeScreenYoutube()
+	}
+
 	return (
 		<Layout style={ { minHeight: '100vh' } }>
 			<MenuCollapsible selected={ ['sub1', '3'] } />
@@ -39,7 +44,7 @@ function YoutubePage() {
 					</Breadcrumb>
 					<div style={ { margin: '4px' } }>
 						Solicitar youtube tela:
-						<Button type='primary' style={ { margin: '0 16px' } }>
+						<Button type='primary' style={ { margin: '0 16px' } } onClick={changeScreen}>
 							Alterar tela
 						</Button>
 					</div>

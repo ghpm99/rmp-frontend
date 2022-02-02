@@ -50,6 +50,10 @@ function MediaPage(props) {
 		}
 	]
 
+	const changeScreen = () => {
+		console.log('clicou alterar tela')
+	}
+
 	return (
 		<Layout style={ { minHeight: '100vh' } }>
 			<MenuCollapsible selected={ ['2'] } />
@@ -62,7 +66,7 @@ function MediaPage(props) {
 					</Breadcrumb>
 					<div style={ { margin: '0 13px' } }>
 						Solicitar Media tela:
-						<Button type='primary' style={ { margin: '13px' } }>
+						<Button type='primary' style={ { margin: '13px' } } onClick={changeScreen}>
 							Alterar tela
 						</Button>
 					</div>
