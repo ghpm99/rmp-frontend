@@ -65,6 +65,11 @@ function MenuCollapsible(props: { selected: string[] }) {
 						Status
 					</Link>
 				</Menu.Item>
+				<Menu.Item key="9" icon={ <DesktopOutlined /> }>
+					<Link href={ '/remote' }>
+						Remoto
+					</Link>
+				</Menu.Item>
 			</Menu>
 		</Sider>
 	)
