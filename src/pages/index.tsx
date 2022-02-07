@@ -5,8 +5,7 @@ import MenuCollapsible from '../components/menu/Index';
 
 const { Header, Content, Footer } = Layout;
 
-export default function Home() {
-
+export default function Home(props) {
   return (
     <Layout style={ { minHeight: '100vh' } }>
       <MenuCollapsible selected={['1']} />
@@ -18,7 +17,7 @@ export default function Home() {
             <Breadcrumb.Item>Inicio</Breadcrumb.Item>
           </Breadcrumb>
           <div style={ { padding: 24, minHeight: 360 } }>
-            Bill is a cat.
+
           </div>
         </Content>
         <Footer style={ { textAlign: 'center' } }>Ant Design ©2018 Created by Ant UED</Footer>

@@ -21,9 +21,10 @@ function StatusPage(props) {
 
 	useEffect(() => {
 		const pusher = new Pusher(props.pusher_key, {
-			cluster: props.pusher_cluster
+			cluster: props.pusher_cluster,
+			authEndpoint: process.env.NEXT_PUBLIC_API_URL + '/pusher/auth',
 		})
-		const channel = pusher.subscribe('krill')
+		const channel = pusher.subscribe('private-display')
 		channel.bind('status', (data) => {
 			const usedMemory = (100 - data.memory).toFixed(1)
 			dispatch(setCpuAndMemoryValue({
@@ -36,7 +37,7 @@ function StatusPage(props) {
 
 	return (
 		<Layout style={ { minHeight: '100vh' } }>
-			<MenuCollapsible selected={ ['8'] } />
+			<MenuCollapsible selected={ ['5'] } />
 			<Layout>
 				<Header style={ { padding: 0 } } />
 				<Content>
@@ -87,9 +88,7 @@ function StatusPage(props) {
 
 export async function getServerSideProps() {
 	const props = {
-		pusher_appId: process.env.PUSHER_APP_ID,
 		pusher_key: process.env.PUSHER_KEY,
-		pusher_secret: process.env.PUSHER_SECRET,
 		pusher_cluster: process.env.PUSHER_CLUSTER
 	}
 	return { props }

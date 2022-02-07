@@ -1,10 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import mediaReducer from '../store/features/media/Index'
+import { configureStore } from '@reduxjs/toolkit'
 import statusReducer from './features/status/Index'
 
 export const store = configureStore({
 	reducer: {
-		media: mediaReducer,
 		status: statusReducer,
 	},
 })

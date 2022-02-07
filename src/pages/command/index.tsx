@@ -12,16 +12,17 @@ const { TextArea } = Input;
 
 let pusher
 
-function RemotePage(props) {
+function CommandPage(props) {
 
     const [command, setCommand] = useState('')
     const [commandReturn, setCommandReturn] = useState('')
 
     useEffect(() => {
         pusher = new Pusher(props.pusher_key, {
-            cluster: props.pusher_cluster
+            authEndpoint: '/api/pusher/auth',
+            cluster: props.pusher_cluster,
         })
-        const channel = pusher.subscribe('krill')
+        const channel = pusher.subscribe('private-display')
         channel.bind('command-return', (data) => {
             setCommandReturn(data.output)
         })
@@ -34,13 +35,13 @@ function RemotePage(props) {
 
     return (
         <Layout style={ { minHeight: '100vh' } }>
-            <MenuCollapsible selected={ ['9'] } />
+            <MenuCollapsible selected={ ['2'] } />
             <Layout>
                 <Header style={ { padding: 0 } } />
                 <Content>
                     <Breadcrumb style={ { margin: '16px 16px' } }>
                         <Breadcrumb.Item>RMP</Breadcrumb.Item>
-                        <Breadcrumb.Item>Remoto</Breadcrumb.Item>
+                        <Breadcrumb.Item>Comando</Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout style={ { margin: '16px 16px' } }>
                         <Input.Group compact>
@@ -72,12 +73,10 @@ function RemotePage(props) {
 
 export async function getServerSideProps() {
     const props = {
-        pusher_appId: process.env.PUSHER_APP_ID,
         pusher_key: process.env.PUSHER_KEY,
-        pusher_secret: process.env.PUSHER_SECRET,
         pusher_cluster: process.env.PUSHER_CLUSTER
     }
     return { props }
 }
 
-export default RemotePage
+export default CommandPage

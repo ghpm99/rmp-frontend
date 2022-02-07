@@ -27,47 +27,30 @@ function MenuCollapsible(props: { selected: string[] }) {
 					</Link>
 				</Menu.Item>
 				<Menu.Item key="2" icon={ <DesktopOutlined /> }>
-					<Link href={ '/media' }>
-						Media
+					<Link href={ '/command' }>
+						Comando
 					</Link>
 				</Menu.Item>
-				<SubMenu key="sub1" icon={ <UserOutlined /> } title="Web">
-					<Menu.Item key="3" icon={ <YoutubeOutlined /> }>
-						<Link href={ '/web/youtube' }>
-							Youtube
-						</Link>
-					</Menu.Item>
-					<Menu.Item key="4">
-						<Link href={ '/web/navigation' }>
-							Navegação
-						</Link>
-					</Menu.Item>
-				</SubMenu>
-				<SubMenu key="sub2" icon={ <ScheduleOutlined /> } title="Rotinas">
-					<Menu.Item key="5">
+				<SubMenu key="sub1" icon={ <ScheduleOutlined /> } title="Rotinas">
+					<Menu.Item key="3">
 						<Link href={ '/routines/kanban' }>
 							Kanban
 						</Link>
 					</Menu.Item>
-					<Menu.Item key="6">
+					<Menu.Item key="4">
 						<Link href={ '/routines/financial' }>
 							Financeiro
 						</Link>
 					</Menu.Item>
 				</SubMenu>
-				<Menu.Item key="7" icon={ <SettingOutlined /> }>
-					<Link href={ '/server' }>
-						Servidor
-					</Link>
-				</Menu.Item>
-				<Menu.Item key="8" icon={ <HddOutlined /> }>
+				<Menu.Item key="5" icon={ <HddOutlined /> }>
 					<Link href={ '/status' }>
 						Status
 					</Link>
 				</Menu.Item>
-				<Menu.Item key="9" icon={ <DesktopOutlined /> }>
-					<Link href={ '/remote' }>
-						Remoto
+				<Menu.Item key="6" icon={ <SettingOutlined /> }>
+					<Link href={ '/server' }>
+						Servidor
 					</Link>
 				</Menu.Item>
 			</Menu>

@@ -8,7 +8,7 @@ const { Header, Content, Footer } = Layout;
 function FinancialPage() {
 	return (
 		<Layout style={ { minHeight: '100vh' } }>
-			<MenuCollapsible selected={['sub2', '6']} />
+			<MenuCollapsible selected={['sub1', '4']} />
 			<Breadcrumb style={ { margin: '16px 0' } }>
             <Breadcrumb.Item>RMP</Breadcrumb.Item>
             <Breadcrumb.Item>Rotinas</Breadcrumb.Item>
