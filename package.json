@@ -2,7 +2,7 @@
   "name": "rmp-frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3500",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,6 +12,7 @@
     "antd": "^4.18.3",
     "axios": "^0.25.0",
     "next": "12.0.8",
+    "next-auth": "^4.2.1",
     "pusher-js": "^7.0.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",

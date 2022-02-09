@@ -2,12 +2,14 @@
 import { Layout, Typography, Form, Input, Button, Checkbox, Card, Row, Col } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { getCsrfToken } from "next-auth/react"
+import { loginService } from '../../services/loginService';
+
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
+export default function LoginPage(props) {
 
-
-function LoginPage(props) {
 
 
     const statusStore = useSelector((state: RootState) => state.status)
@@ -15,6 +17,10 @@ function LoginPage(props) {
 
     const onFinish = (values: any) => {
         console.log('Success:', values);
+        loginService(props.csrfToken, values.username, values.password).then((a) => {
+            console.log(a)
+        })
+
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -45,6 +51,7 @@ function LoginPage(props) {
                                 onFinishFailed={ onFinishFailed }
                                 autoComplete="off"
                             >
+                                <input name='csrfToken' type='hidden' defaultValue={props.csrfToken} />
                                 <Form.Item
                                     label="Usuario"
                                     name="username"
@@ -81,4 +88,11 @@ function LoginPage(props) {
     )
 }
 
-export default LoginPage
+export async function getServerSideProps(context) {
+    const csrfToken = await getCsrfToken(context);
+    return {
+        props: {
+            csrfToken
+        },
+    }
+}

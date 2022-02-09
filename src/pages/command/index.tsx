@@ -71,6 +71,20 @@ function CommandPage(props) {
 
 }
 
+CommandPage.auth = {
+    role: 'admin',
+    loading: <LoadingPage/>,
+    unauthorized: "/login",
+}
+
+function LoadingPage () {
+    return(
+        <div>
+            Carregando...
+        </div>
+    )
+}
+
 export async function getServerSideProps() {
     const props = {
         pusher_key: process.env.PUSHER_KEY,

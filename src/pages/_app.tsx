@@ -4,14 +4,37 @@ import '../../styles/globals.css'
 import 'antd/dist/antd.css'
 import { store } from '../store/store'
 import { useEffect } from 'react'
+import { SessionProvider, useSession } from 'next-auth/react'
 
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
-    <Provider store={ store }>
-      <Component { ...pageProps } />
-    </Provider>
+    <SessionProvider session={ session }>
+      { Component.auth ? (
+        <Auth>
+          <Provider store={ store }>
+            <Component { ...pageProps } />
+          </Provider>
+        </Auth>
+      ) : (
+        <Provider store={ store }>
+          <Component { ...pageProps } />
+        </Provider>
+      ) }
+
+    </SessionProvider>
   )
 }
 
-export default MyApp
+function Auth({ children }) {
+  const { data: session, status } = useSession({ required: true })
+  const isUser = !!session?.user
+
+  if (isUser) {
+    return children
+  }
+
+  // Session is being fetched, or no user.
+  // If no user, useEffect() will redirect.
+  return <div>Loading...</div>
+}
