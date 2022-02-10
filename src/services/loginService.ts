@@ -10,5 +10,5 @@ export async function loginService(csrfToken, username, password) {
 		username,
 		password,
 	})
-	return response.data
+	return response.status
 }

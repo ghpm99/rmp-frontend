@@ -4,23 +4,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { getCsrfToken } from "next-auth/react"
 import { loginService } from '../../services/loginService';
+import { useSession, signIn } from 'next-auth/react';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export default function LoginPage(props) {
 
-
-
     const statusStore = useSelector((state: RootState) => state.status)
     const dispatch = useDispatch()
+    const { data, status } = useSession()
+    console.log('session',data, status)
 
     const onFinish = (values: any) => {
         console.log('Success:', values);
-        loginService(props.csrfToken, values.username, values.password).then((a) => {
-            console.log(a)
-        })
-
+        signIn('credentials', {username:values.username ,password:values.password})
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -51,7 +49,6 @@ export default function LoginPage(props) {
                                 onFinishFailed={ onFinishFailed }
                                 autoComplete="off"
                             >
-                                <input name='csrfToken' type='hidden' defaultValue={props.csrfToken} />
                                 <Form.Item
                                     label="Usuario"
                                     name="username"
