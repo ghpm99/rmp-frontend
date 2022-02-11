@@ -1,7 +1,9 @@
 
 import { Breadcrumb, Button, Input, Layout, Typography } from 'antd';
+import { useSession } from 'next-auth/react';
 import Pusher from 'pusher-js';
 import { useEffect, useState } from 'react';
+import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { sendCommandService } from '../../services/remoteService';
 
@@ -16,6 +18,9 @@ function CommandPage(props) {
 
     const [command, setCommand] = useState('')
     const [commandReturn, setCommandReturn] = useState('')
+    const { data, status } = useSession()
+
+    console.log(data, status)
 
     useEffect(() => {
         pusher = new Pusher(props.pusher_key, {
@@ -37,7 +42,9 @@ function CommandPage(props) {
         <Layout style={ { minHeight: '100vh' } }>
             <MenuCollapsible selected={ ['2'] } />
             <Layout>
-                <Header style={ { padding: 0 } } />
+                <Header style={ { padding: 0 } } >
+                    <LoginHeader />
+                </Header>
                 <Content>
                     <Breadcrumb style={ { margin: '16px 16px' } }>
                         <Breadcrumb.Item>RMP</Breadcrumb.Item>
@@ -73,12 +80,12 @@ function CommandPage(props) {
 
 CommandPage.auth = {
     role: 'admin',
-    loading: <LoadingPage/>,
+    loading: <LoadingPage />,
     unauthorized: "/login",
 }
 
-function LoadingPage () {
-    return(
+function LoadingPage() {
+    return (
         <div>
             Carregando...
         </div>

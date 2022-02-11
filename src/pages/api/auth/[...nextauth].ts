@@ -14,7 +14,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 			// e.g. domain, username, password, 2FA token, etc.
 			// You can pass any HTML attribute to the <input> tag through the object.
 			credentials: {
-				username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+				username: { label: 'Username', type: 'text' },
 				password: { label: 'Password', type: 'password' },
 			},
 			async authorize(credentials, req) {
@@ -24,16 +24,20 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 				// e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
 				// You can also use the `req` object to obtain additional parameters
 				// (i.e., the request IP address)
-				console.log('credentials', credentials)
-
-				const res = await axios.post(
+				const tokenRes = await axios.post(
 					process.env.NEXT_PUBLIC_API_URL + '/auth/login',
 					{
 						credentials,
 					}
 				)
+				const token = await tokenRes.data.token
+				const res = await axios.get(
+					process.env.NEXT_PUBLIC_API_URL + '/auth/user',
+					{
+						headers: { Authorization: 'Basic ' + token },
+					}
+				)
 				const user = await res.data
-				console.log('user', user)
 				// If no error and we have user data, return it
 				if (res.status === 200 && user) {
 					return user
@@ -46,10 +50,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
 	const pages = {
 		signIn: '/login',
-    signOut: '/auth/signout',
-    error: '/login',
-    verifyRequest: '/auth/verify-request',
-    newUser: '/auth/new-user'
+		signOut: '/auth/signout',
+		error: '/login',
+		verifyRequest: '/auth/verify-request',
+		newUser: '/auth/new-user',
 	}
 
 	return await NextAuth(req, res, {

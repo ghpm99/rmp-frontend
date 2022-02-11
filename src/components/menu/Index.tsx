@@ -6,6 +6,7 @@ import { Layout, Menu } from 'antd';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
+import styles from './Menu.module.css'
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -23,7 +24,7 @@ function MenuCollapsible(props: { selected: string[] }) {
 	}
 	return (
 		<Sider collapsible collapsed={ collapsed } onCollapse={ toggleCollapsed }>
-			<div style={ { color: 'white', textAlign: 'center', margin: '19px' } }>RMP</div>
+			<div className={ styles.logo }>RMP</div>
 			<Menu theme="dark" selectedKeys={ props.selected } mode="inline">
 				<Menu.Item key="1" icon={ <HomeOutlined /> }>
 					<Link href={ '/' }>

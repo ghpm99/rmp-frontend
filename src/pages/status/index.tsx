@@ -3,9 +3,11 @@ import { Breadcrumb, Layout, Progress, Typography } from 'antd';
 import Pusher from 'pusher-js';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { setCpuAndMemoryValue } from '../../store/features/status/Index';
 import { RootState } from '../../store/store';
+import S from './Status.module.css'
 
 
 const { Header, Content } = Layout;
@@ -36,22 +38,19 @@ function StatusPage(props) {
 
 
 	return (
-		<Layout style={ { minHeight: '100vh' } }>
+		<Layout className={ S.layout }>
 			<MenuCollapsible selected={ ['5'] } />
 			<Layout>
-				<Header style={ { padding: 0 } } />
+				<Header className={ S.header } >
+					<LoginHeader />
+				</Header>
 				<Content>
-					<Breadcrumb style={ { margin: '16px 16px' } }>
+					<Breadcrumb className={ S.breadcrumb }>
 						<Breadcrumb.Item>RMP</Breadcrumb.Item>
 						<Breadcrumb.Item>Status</Breadcrumb.Item>
 					</Breadcrumb>
-					<div style={ { display: 'flex', margin: '16px 16px' } }>
-						<div style={ {
-							margin: '16px 16px',
-							display: 'flex',
-							alignItems: 'center',
-							flexDirection: 'column'
-						} }>
+					<div className={ S.container }>
+						<div className={ S.indicator }>
 							<Title level={ 2 }>Uso de CPU</Title>
 							<Progress
 								type="circle"
@@ -62,12 +61,7 @@ function StatusPage(props) {
 								percent={ statusStore.cpu }
 							/>
 						</div>
-						<div style={ {
-							margin: '16px 16px',
-							display: 'flex',
-							alignItems: 'center',
-							flexDirection: 'column'
-						} }>
+						<div className={ S.indicator }>
 							<Title level={ 2 }>Uso de Memoria</Title>
 							<Progress
 								type="circle"
@@ -84,6 +78,20 @@ function StatusPage(props) {
 		</Layout>
 
 	)
+}
+
+StatusPage.auth = {
+    role: 'admin',
+    loading: <LoadingPage />,
+    unauthorized: "/login",
+}
+
+function LoadingPage() {
+    return (
+        <div>
+            Carregando...
+        </div>
+    )
 }
 
 export async function getServerSideProps() {

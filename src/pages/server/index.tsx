@@ -18,4 +18,18 @@ function ServerPage() {
 	)
 }
 
+ServerPage.auth = {
+    role: 'admin',
+    loading: <LoadingPage />,
+    unauthorized: "/login",
+}
+
+function LoadingPage() {
+    return (
+        <div>
+            Carregando...
+        </div>
+    )
+}
+
 export default ServerPage

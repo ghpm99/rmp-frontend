@@ -19,4 +19,18 @@ function KanbanPage() {
 	)
 }
 
+KanbanPage.auth = {
+    role: 'admin',
+    loading: <LoadingPage />,
+    unauthorized: "/login",
+}
+
+function LoadingPage() {
+    return (
+        <div>
+            Carregando...
+        </div>
+    )
+}
+
 export default KanbanPage

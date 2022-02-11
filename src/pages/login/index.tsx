@@ -1,24 +1,23 @@
 
-import { Layout, Typography, Form, Input, Button, Checkbox, Card, Row, Col } from 'antd';
+import { Button, Card, Checkbox, Form, Input, Layout, Typography } from 'antd';
+import { signIn } from 'next-auth/react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setToken } from '../../store/features/common/Index';
 import { RootState } from '../../store/store';
-import { getCsrfToken } from "next-auth/react"
-import { loginService } from '../../services/loginService';
-import { useSession, signIn } from 'next-auth/react';
+import { createBasicAuth } from '../../util/auth';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export default function LoginPage(props) {
 
-    const statusStore = useSelector((state: RootState) => state.status)
+    const statusStore = useSelector((state: RootState) => state.common)
     const dispatch = useDispatch()
-    const { data, status } = useSession()
-    console.log('session',data, status)
 
     const onFinish = (values: any) => {
-        console.log('Success:', values);
-        signIn('credentials', {username:values.username ,password:values.password})
+        const token = createBasicAuth(values.username, values.password)
+        dispatch(setToken(token))
+        signIn('credentials', { username: values.username, password: values.password, callbackUrl: '/' })
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -83,13 +82,4 @@ export default function LoginPage(props) {
         </Layout>
 
     )
-}
-
-export async function getServerSideProps(context) {
-    const csrfToken = await getCsrfToken(context);
-    return {
-        props: {
-            csrfToken
-        },
-    }
 }
