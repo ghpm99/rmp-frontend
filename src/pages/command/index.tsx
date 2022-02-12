@@ -3,6 +3,7 @@ import { Breadcrumb, Button, Input, Layout, Typography } from 'antd';
 import { useSession } from 'next-auth/react';
 import Pusher from 'pusher-js';
 import { useEffect, useState } from 'react';
+import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { sendCommandService } from '../../services/remoteService';
@@ -20,12 +21,11 @@ function CommandPage(props) {
     const [commandReturn, setCommandReturn] = useState('')
     const { data, status } = useSession()
 
-    console.log(data, status)
-
     useEffect(() => {
         pusher = new Pusher(props.pusher_key, {
-            authEndpoint: '/api/pusher/auth',
+            authEndpoint: process.env.NEXT_PUBLIC_API_URL + '/pusher/auth',
             cluster: props.pusher_cluster,
+            auth: { headers: { 'Authorization': `Basic ${data.accessToken}` } }
         })
         const channel = pusher.subscribe('private-display')
         channel.bind('command-return', (data) => {
@@ -82,14 +82,6 @@ CommandPage.auth = {
     role: 'admin',
     loading: <LoadingPage />,
     unauthorized: "/login",
-}
-
-function LoadingPage() {
-    return (
-        <div>
-            Carregando...
-        </div>
-    )
 }
 
 export async function getServerSideProps() {

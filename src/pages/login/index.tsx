@@ -11,12 +11,7 @@ const { Title } = Typography;
 
 export default function LoginPage(props) {
 
-    const statusStore = useSelector((state: RootState) => state.common)
-    const dispatch = useDispatch()
-
     const onFinish = (values: any) => {
-        const token = createBasicAuth(values.username, values.password)
-        dispatch(setToken(token))
         signIn('credentials', { username: values.username, password: values.password, callbackUrl: '/' })
     };
 

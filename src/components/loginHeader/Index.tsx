@@ -10,8 +10,6 @@ export default function LoginHeader() {
 
     const { data, status } = useSession()
 
-    console.log(data.user)
-
     const content = (
         <div>
             <div>{data?.user.name}</div>

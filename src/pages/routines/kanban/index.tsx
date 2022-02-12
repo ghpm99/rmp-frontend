@@ -1,5 +1,6 @@
 
 import { Breadcrumb, Layout } from 'antd';
+import LoadingPage from '../../../components/loadingPage/Index';
 import MenuCollapsible from '../../../components/menu/Index';
 
 
@@ -23,14 +24,6 @@ KanbanPage.auth = {
     role: 'admin',
     loading: <LoadingPage />,
     unauthorized: "/login",
-}
-
-function LoadingPage() {
-    return (
-        <div>
-            Carregando...
-        </div>
-    )
 }
 
 export default KanbanPage

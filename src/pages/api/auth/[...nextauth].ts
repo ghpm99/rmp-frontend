@@ -38,6 +38,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 					}
 				)
 				const user = await res.data
+				user.token = token
 				// If no error and we have user data, return it
 				if (res.status === 200 && user) {
 					return user
@@ -56,8 +57,22 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 		newUser: '/auth/new-user',
 	}
 
+	const callbacks = {
+		async session({ session, user, token }) {
+			session.accessToken = token.userSession
+			return session
+		},
+		async jwt({ token, user, account, profile, isNewUser }) {
+			if (user !== undefined) {
+				token.userSession = user.token
+			}
+			return token
+		},
+	}
+
 	return await NextAuth(req, res, {
 		providers,
 		pages,
+		callbacks,
 	})
 }

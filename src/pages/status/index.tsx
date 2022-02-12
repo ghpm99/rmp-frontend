@@ -1,41 +1,32 @@
 
 import { Breadcrumb, Layout, Progress, Typography } from 'antd';
-import Pusher from 'pusher-js';
-import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import Pusher from 'react-pusher';
 import { useDispatch, useSelector } from 'react-redux';
+import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { setCpuAndMemoryValue } from '../../store/features/status/Index';
 import { RootState } from '../../store/store';
-import S from './Status.module.css'
+import S from './Status.module.css';
 
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
 
-
 function StatusPage(props) {
-
 
 	const statusStore = useSelector((state: RootState) => state.status)
 	const dispatch = useDispatch()
 
-	useEffect(() => {
-		const pusher = new Pusher(props.pusher_key, {
-			cluster: props.pusher_cluster,
-			authEndpoint: process.env.NEXT_PUBLIC_API_URL + '/pusher/auth',
-		})
-		const channel = pusher.subscribe('private-display')
-		channel.bind('status', (data) => {
-			const usedMemory = (100 - data.memory).toFixed(1)
-			dispatch(setCpuAndMemoryValue({
-				cpu: data.cpu,
-				memory: usedMemory
-			}))
-		})
-	}, [])
-
+	const statusEvent = (data) => {
+		const usedMemory = (100 - data.memory).toFixed(1)
+		dispatch(setCpuAndMemoryValue({
+			cpu: data.cpu,
+			memory: usedMemory
+		}))
+	}
 
 	return (
 		<Layout className={ S.layout }>
@@ -75,23 +66,20 @@ function StatusPage(props) {
 					</div>
 				</Content>
 			</Layout>
+			<Pusher
+				channel='private-status'
+				event='status'
+				onUpdate={statusEvent}
+			/>
 		</Layout>
 
 	)
 }
 
 StatusPage.auth = {
-    role: 'admin',
-    loading: <LoadingPage />,
-    unauthorized: "/login",
-}
-
-function LoadingPage() {
-    return (
-        <div>
-            Carregando...
-        </div>
-    )
+	role: 'admin',
+	loading: <LoadingPage />,
+	unauthorized: "/login",
 }
 
 export async function getServerSideProps() {
