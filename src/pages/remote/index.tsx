@@ -1,8 +1,8 @@
 
 import { Breadcrumb, Button, Input, Layout, Typography } from 'antd';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import Pusher from 'react-pusher';
-import { useEffect, useState } from 'react';
 import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
@@ -21,15 +21,13 @@ function CommandPage(props) {
     const [commandReturn, setCommandReturn] = useState('')
     const { data, status } = useSession()
 
-
-    const sendCommand = () => {
-        sendCommandService(command)
-        setCommand('')
+    const screenData = (data) => {
+        console.log(data)
     }
 
     return (
         <Layout style={ { minHeight: '100vh' } }>
-            <MenuCollapsible selected={ ['2'] } />
+            <MenuCollapsible selected={ ['3'] } />
             <Layout>
                 <Header style={ { padding: 0 } } >
                     <LoginHeader />
@@ -37,34 +35,49 @@ function CommandPage(props) {
                 <Content>
                     <Breadcrumb style={ { margin: '16px 16px' } }>
                         <Breadcrumb.Item>RMP</Breadcrumb.Item>
-                        <Breadcrumb.Item>Comando</Breadcrumb.Item>
+                        <Breadcrumb.Item>Remoto</Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout style={ { margin: '16px 16px' } }>
                         <Input.Group compact>
                             <Input
-                                placeholder='Digite um comando'
-                                name='command'
+                                placeholder='Pressione uma tecla'
+                                name='key'
                                 onChange={ (event) => { setCommand(event.target.value) } }
                                 value={ command }
                                 style={ { width: 'calc(100% - 200px)' } }
                             />
                             <Button
                                 type='primary'
-                                onClick={ () => { sendCommand() } }
+                                onClick={ () => { } }
                             >
-                                Enviar comando
+                                Enviar tecla
                             </Button>
-                            <Title level={ 4 }>Retorno do comando:</Title>
-                            <TextArea rows={ 4 } value={ commandReturn } />
+                        </Input.Group>
+                    </Layout>
+                    <Layout style={ { margin: '16px 16px' } }>
+                        <Input.Group compact>
+                            <Input
+                                placeholder='Pressione uma tecla'
+                                name='key'
+                                onChange={ (event) => { setCommand(event.target.value) } }
+                                value={ command }
+                                style={ { width: 'calc(100% - 200px)' } }
+                            />
+                            <Button
+                                type='primary'
+                                onClick={ () => { } }
+                            >
+                                Enviar combinação de tecla
+                            </Button>
                         </Input.Group>
                     </Layout>
                 </Content>
             </Layout>
             <Pusher
-                channel='private-display'
-                event='command-return'
-                onUpdate={ (data) => setCommandReturn(data.output) }
-            />
+				channel='private-remote'
+				event='screen'
+				onUpdate={screenData}
+			/>
         </Layout>
 
     )

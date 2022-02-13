@@ -38,24 +38,29 @@ function MenuCollapsible(props: { selected: string[] }) {
 								Comando
 							</Link>
 						</Menu.Item>
+						<Menu.Item key="3" icon={ <DesktopOutlined /> }>
+							<Link href={ '/remote' }>
+								Remoto
+							</Link>
+						</Menu.Item>
 						<SubMenu key="sub1" icon={ <ScheduleOutlined /> } title="Rotinas">
-							<Menu.Item key="3">
+							<Menu.Item key="4">
 								<Link href={ '/routines/kanban' }>
 									Kanban
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="4">
+							<Menu.Item key="5">
 								<Link href={ '/routines/financial' }>
 									Financeiro
 								</Link>
 							</Menu.Item>
 						</SubMenu>
-						<Menu.Item key="5" icon={ <HddOutlined /> }>
+						<Menu.Item key="6" icon={ <HddOutlined /> }>
 							<Link href={ '/status' }>
 								Status
 							</Link>
 						</Menu.Item>
-						<Menu.Item key="6" icon={ <SettingOutlined /> }>
+						<Menu.Item key="7" icon={ <SettingOutlined /> }>
 							<Link href={ '/server' }>
 								Servidor
 							</Link>

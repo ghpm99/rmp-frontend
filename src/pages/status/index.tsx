@@ -30,7 +30,7 @@ function StatusPage(props) {
 
 	return (
 		<Layout className={ S.layout }>
-			<MenuCollapsible selected={ ['5'] } />
+			<MenuCollapsible selected={ ['6'] } />
 			<Layout>
 				<Header className={ S.header } >
 					<LoginHeader />
