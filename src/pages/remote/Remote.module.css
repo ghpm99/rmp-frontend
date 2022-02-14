@@ -1,0 +1,32 @@
+.vertical_slider {
+	display: inline-block;
+	height: 300px;
+}
+
+.mouse_container {
+    margin: 16px;
+}
+
+.hotkey {
+	margin: 16px 16px;
+}
+
+.key_hold {
+	margin: 16px 16px;
+}
+
+.breadcrumb {
+	margin: 16px 16px;
+}
+
+.container {
+	min-height: 100vh;
+}
+
+.header {
+	padding: 0;
+}
+
+.buttons_mouse {
+	margin: 6px;
+}

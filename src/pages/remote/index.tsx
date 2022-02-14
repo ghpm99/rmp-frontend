@@ -1,83 +1,140 @@
 
-import { Breadcrumb, Button, Input, Layout, Typography } from 'antd';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import Pusher from 'react-pusher';
+import { Breadcrumb, Button, Input, Layout, Slider, Typography } from 'antd';
+import { useEffect, useState } from 'react';
 import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
-import { sendCommandService } from '../../services/remoteService';
+import { hotkeyService, keyPressService, mouseButtonService, mouseMoveService, screenSizeService } from '../../services/remoteService';
+import styles from './Remote.module.css';
 
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 const { TextArea } = Input;
 
-let pusher
 
 function CommandPage(props) {
 
-    const [command, setCommand] = useState('')
-    const [commandReturn, setCommandReturn] = useState('')
-    const { data, status } = useSession()
+    const [key, setKey] = useState('')
+    const [hotkey, setHotkey] = useState('')
+    const [screenSize, setScreenSize] = useState({
+        screen_width: 0,
+        screen_height: 0,
+        x: 0,
+        y: 0
+    })
 
-    const screenData = (data) => {
-        console.log(data)
-    }
+    useEffect(() => {
+        screenSizeService().then(data => {
+            setScreenSize(data)
+        })
+
+    }, [])
 
     return (
-        <Layout style={ { minHeight: '100vh' } }>
+        <Layout className={ styles.container }>
             <MenuCollapsible selected={ ['3'] } />
             <Layout>
-                <Header style={ { padding: 0 } } >
+                <Header className={ styles.header } >
                     <LoginHeader />
                 </Header>
                 <Content>
-                    <Breadcrumb style={ { margin: '16px 16px' } }>
+                    <Breadcrumb className={ styles.breadcrumb }>
                         <Breadcrumb.Item>RMP</Breadcrumb.Item>
                         <Breadcrumb.Item>Remoto</Breadcrumb.Item>
                     </Breadcrumb>
-                    <Layout style={ { margin: '16px 16px' } }>
+                    <Layout className={ styles.key_hold }>
                         <Input.Group compact>
                             <Input
                                 placeholder='Pressione uma tecla'
                                 name='key'
-                                onChange={ (event) => { setCommand(event.target.value) } }
-                                value={ command }
+                                onChange={ (event) => { setKey(event.target.value) } }
+                                value={ key }
                                 style={ { width: 'calc(100% - 200px)' } }
                             />
                             <Button
                                 type='primary'
-                                onClick={ () => { } }
+                                onClick={ () => {
+                                    keyPressService(key)
+                                    setKey('')
+                                } }
                             >
                                 Enviar tecla
                             </Button>
                         </Input.Group>
                     </Layout>
-                    <Layout style={ { margin: '16px 16px' } }>
+                    <Layout className={ styles.hotkey }>
                         <Input.Group compact>
                             <Input
                                 placeholder='Pressione uma tecla'
                                 name='key'
-                                onChange={ (event) => { setCommand(event.target.value) } }
-                                value={ command }
+                                onChange={ (event) => { setHotkey(event.target.value) } }
+                                value={ hotkey }
                                 style={ { width: 'calc(100% - 200px)' } }
                             />
                             <Button
                                 type='primary'
-                                onClick={ () => { } }
+                                onClick={ () => {
+                                    hotkeyService(hotkey)
+                                    setHotkey('')
+                                } }
                             >
                                 Enviar combinação de tecla
                             </Button>
                         </Input.Group>
+                        <div className={ styles.mouse_container }>
+                            <Slider
+                                min={ 0 }
+                                max={ screenSize.screen_width }
+                                onChange={ (event) => setScreenSize({
+                                    ...screenSize,
+                                    x: event
+                                }) }
+                            />
+                            <div className={ styles.vertical_slider }>
+                                <Slider
+                                    reverse
+                                    vertical
+                                    min={ 0 }
+                                    max={ screenSize.screen_height }
+                                    onChange={ (event) => setScreenSize({
+                                        ...screenSize,
+                                        y: event
+                                    }) }
+                                />
+                            </div>
+                            <Button
+                                type='primary'
+                                onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
+                                className={styles.buttons_mouse}
+                            >
+                                Mover
+                            </Button>
+                            <Button
+                                type='primary'
+                                className={styles.buttons_mouse}
+                                onClick={() => mouseButtonService('click')}
+                            >
+                                Clicar
+                            </Button>
+                            <Button
+                                type='primary'
+                                className={styles.buttons_mouse}
+                                onClick={() => mouseButtonService('double-click')}
+                            >
+                                Click duplo
+                            </Button>
+                            <Button
+                                type='primary'
+                                className={styles.buttons_mouse}
+                                onClick={() => mouseButtonService('click-right')}
+                            >
+                                Click direito
+                            </Button>
+                        </div>
                     </Layout>
                 </Content>
             </Layout>
-            <Pusher
-				channel='private-remote'
-				event='screen'
-				onUpdate={screenData}
-			/>
         </Layout>
 
     )
