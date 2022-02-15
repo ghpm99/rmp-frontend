@@ -44,14 +44,16 @@ function CommandPage(props) {
                         <Breadcrumb.Item>Remoto</Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout className={ styles.key_hold }>
-                        <Input.Group compact>
-                            <Input
-                                placeholder='Pressione uma tecla'
-                                name='key'
-                                onChange={ (event) => { setKey(event.target.value) } }
-                                value={ key }
-                                style={ { width: 'calc(100% - 200px)' } }
-                            />
+                        <Input.Group compact className={ styles.command_input }>
+                            <div className={ styles.input }>
+                                <Input
+                                    placeholder='Pressione uma tecla'
+                                    name='key'
+                                    onChange={ (event) => { setKey(event.target.value) } }
+                                    value={ key }
+                                />
+                            </div>
+
                             <Button
                                 type='primary'
                                 onClick={ () => {
@@ -64,14 +66,15 @@ function CommandPage(props) {
                         </Input.Group>
                     </Layout>
                     <Layout className={ styles.hotkey }>
-                        <Input.Group compact>
-                            <Input
-                                placeholder='Pressione uma tecla'
-                                name='key'
-                                onChange={ (event) => { setHotkey(event.target.value) } }
-                                value={ hotkey }
-                                style={ { width: 'calc(100% - 200px)' } }
-                            />
+                        <Input.Group compact className={ styles.command_input }>
+                            <div className={ styles.input }>
+                                <Input
+                                    placeholder='Pressione uma tecla'
+                                    name='key'
+                                    onChange={ (event) => { setHotkey(event.target.value) } }
+                                    value={ hotkey }
+                                />
+                            </div>
                             <Button
                                 type='primary'
                                 onClick={ () => {
@@ -103,34 +106,36 @@ function CommandPage(props) {
                                     }) }
                                 />
                             </div>
-                            <Button
-                                type='primary'
-                                onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
-                                className={styles.buttons_mouse}
-                            >
-                                Mover
-                            </Button>
-                            <Button
-                                type='primary'
-                                className={styles.buttons_mouse}
-                                onClick={() => mouseButtonService('click')}
-                            >
-                                Clicar
-                            </Button>
-                            <Button
-                                type='primary'
-                                className={styles.buttons_mouse}
-                                onClick={() => mouseButtonService('double-click')}
-                            >
-                                Click duplo
-                            </Button>
-                            <Button
-                                type='primary'
-                                className={styles.buttons_mouse}
-                                onClick={() => mouseButtonService('click-right')}
-                            >
-                                Click direito
-                            </Button>
+                            <div className={styles.buttons}>
+                                <Button
+                                    type='primary'
+                                    onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
+                                    className={ styles.buttons_mouse }
+                                >
+                                    Mover
+                                </Button>
+                                <Button
+                                    type='primary'
+                                    className={ styles.buttons_mouse }
+                                    onClick={ () => mouseButtonService('click') }
+                                >
+                                    Clicar
+                                </Button>
+                                <Button
+                                    type='primary'
+                                    className={ styles.buttons_mouse }
+                                    onClick={ () => mouseButtonService('double-click') }
+                                >
+                                    Click duplo
+                                </Button>
+                                <Button
+                                    type='primary'
+                                    className={ styles.buttons_mouse }
+                                    onClick={ () => mouseButtonService('click-right') }
+                                >
+                                    Click direito
+                                </Button>
+                            </div>
                         </div>
                     </Layout>
                 </Content>

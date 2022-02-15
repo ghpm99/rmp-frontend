@@ -1,12 +1,13 @@
 
 import { Breadcrumb, Button, Input, Layout, Typography } from 'antd';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import Pusher from 'react-pusher';
-import { useEffect, useState } from 'react';
 import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { sendCommandService } from '../../services/remoteService';
+import styles from './Command.module.css';
 
 
 const { Header, Content } = Layout;
@@ -28,34 +29,44 @@ function CommandPage(props) {
     }
 
     return (
-        <Layout style={ { minHeight: '100vh' } }>
+        <Layout className={ styles.container }>
             <MenuCollapsible selected={ ['2'] } />
             <Layout>
-                <Header style={ { padding: 0 } } >
+                <Header className={ styles.header } >
                     <LoginHeader />
                 </Header>
                 <Content>
-                    <Breadcrumb style={ { margin: '16px 16px' } }>
+                    <Breadcrumb className={ styles.breadcrumb }>
                         <Breadcrumb.Item>RMP</Breadcrumb.Item>
                         <Breadcrumb.Item>Comando</Breadcrumb.Item>
                     </Breadcrumb>
-                    <Layout style={ { margin: '16px 16px' } }>
-                        <Input.Group compact>
-                            <Input
-                                placeholder='Digite um comando'
-                                name='command'
-                                onChange={ (event) => { setCommand(event.target.value) } }
-                                value={ command }
-                                style={ { width: 'calc(100% - 200px)' } }
-                            />
-                            <Button
-                                type='primary'
-                                onClick={ () => { sendCommand() } }
-                            >
-                                Enviar comando
-                            </Button>
-                            <Title level={ 4 }>Retorno do comando:</Title>
-                            <TextArea rows={ 4 } value={ commandReturn } />
+                    <Layout className={ styles.command_container }>
+                        <Input.Group>
+                            <div className={ styles.command_input }>
+                                <div className={ styles.input }>
+                                    <Input
+                                        placeholder='Digite um comando'
+                                        name='command'
+                                        onChange={ (event) => { setCommand(event.target.value) } }
+                                        value={ command }
+
+                                    />
+                                </div>
+                                <Button
+                                    type='primary'
+                                    onClick={ () => { sendCommand() } }
+                                >
+                                    Enviar comando
+                                </Button>
+                            </div>
+                            <div>
+                                <Title level={ 4 }>Retorno do comando:</Title>
+                                <TextArea
+                                    contentEditable={false}
+                                    rows={ 4 }
+                                    value={ commandReturn }
+                                />
+                            </div>
                         </Input.Group>
                     </Layout>
                 </Content>

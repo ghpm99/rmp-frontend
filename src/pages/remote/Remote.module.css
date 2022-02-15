@@ -30,3 +30,20 @@
 .buttons_mouse {
 	margin: 6px;
 }
+
+.input {
+    width: calc(100% - 200px);
+}
+
+.buttons {
+	margin: 16px;
+}
+
+@media only screen and (max-width: 600px) {
+    .command_input{
+        display: grid;
+    }
+    .input {
+        width: 100%;
+    }
+}
