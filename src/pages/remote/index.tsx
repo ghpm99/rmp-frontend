@@ -6,6 +6,7 @@ import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
 import { hotkeyService, keyPressService, mouseButtonService, mouseMoveService, screenSizeService } from '../../services/remoteService';
 import styles from './Remote.module.css';
+import Pusher from 'react-pusher'
 
 
 const { Header, Content } = Layout;
@@ -14,6 +15,10 @@ const { TextArea } = Input;
 
 
 function CommandPage(props) {
+
+    const [hook, setHook] = useState({
+        src: 'https://rmp-server-dev.herokuapp.com/media/screenshot/screenshot.png'
+    })
 
     const [key, setKey] = useState('')
     const [hotkey, setHotkey] = useState('')
@@ -30,6 +35,21 @@ function CommandPage(props) {
         })
 
     }, [])
+
+    const onNewScreenshot = (data) => {
+        setHook({
+            src: `https://rmp-server-dev.herokuapp.com/media/screenshot/screenshot.png?${Date.now()}`
+        })
+    }
+
+    const onClickScreenshot = (event) => {
+        setScreenSize({
+            ...screenSize,
+            x: event.nativeEvent.offsetX,
+            y: event.nativeEvent.offsetY
+        })
+        mouseMoveService(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+    }
 
     return (
         <Layout className={ styles.container }>
@@ -53,7 +73,6 @@ function CommandPage(props) {
                                     value={ key }
                                 />
                             </div>
-
                             <Button
                                 type='primary'
                                 onClick={ () => {
@@ -86,9 +105,16 @@ function CommandPage(props) {
                             </Button>
                         </Input.Group>
                         <div className={ styles.mouse_container }>
+                            <div className={ styles.screenshot_container }>
+                                <img
+                                    src={ hook.src }
+                                    onClick={onClickScreenshot}
+                                />
+                            </div>
                             <Slider
                                 min={ 0 }
                                 max={ screenSize.screen_width }
+                                value={screenSize.x}
                                 onChange={ (event) => setScreenSize({
                                     ...screenSize,
                                     x: event
@@ -100,13 +126,14 @@ function CommandPage(props) {
                                     vertical
                                     min={ 0 }
                                     max={ screenSize.screen_height }
+                                    value={screenSize.y}
                                     onChange={ (event) => setScreenSize({
                                         ...screenSize,
                                         y: event
                                     }) }
                                 />
                             </div>
-                            <div className={styles.buttons}>
+                            <div className={ styles.buttons }>
                                 <Button
                                     type='primary'
                                     onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
@@ -137,9 +164,15 @@ function CommandPage(props) {
                                 </Button>
                             </div>
                         </div>
+
                     </Layout>
                 </Content>
             </Layout>
+            <Pusher
+                channel='private-remote'
+                event='new-screenshot'
+                onUpdate={ onNewScreenshot }
+            />
         </Layout>
 
     )
