@@ -38,7 +38,7 @@ function CommandPage(props) {
 
     const onNewScreenshot = (data) => {
         setHook({
-            src: `https://rmp-server-dev.herokuapp.com/media/screenshot/screenshot.png?${Date.now()}`
+            src: `${process.env.NEXT_PUBLIC_API_URL}/media/screenshot/screenshot.png?${Date.now()}`
         })
     }
 
