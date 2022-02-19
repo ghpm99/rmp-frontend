@@ -82,6 +82,10 @@ StatusPage.auth = {
 	unauthorized: "/login",
 }
 
+StatusPage.pusher = {
+	name: 'status'
+}
+
 export async function getServerSideProps() {
 	const props = {
 		pusher_key: process.env.PUSHER_KEY,

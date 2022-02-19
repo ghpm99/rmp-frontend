@@ -89,6 +89,10 @@ CommandPage.auth = {
     unauthorized: "/login",
 }
 
+CommandPage.pusher = {
+    name: 'command'
+}
+
 export async function getServerSideProps() {
     const props = {
         pusher_key: process.env.PUSHER_KEY,

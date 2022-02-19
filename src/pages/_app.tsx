@@ -13,13 +13,22 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps } 
   return (
     <SessionProvider session={ session }>
       { Component.auth ? (
-        <Auth>
-          <Provider store={ store }>
-            <PusherProvider>
+        Component.pusher ? (
+          <Auth>
+            <Provider store={ store }>
+              <PusherProvider>
+                <Component { ...pageProps } />
+              </PusherProvider>
+            </Provider>
+          </Auth>
+        ) : (
+          <Auth>
+            <Provider store={ store }>
               <Component { ...pageProps } />
-            </PusherProvider>
-          </Provider>
-        </Auth>
+            </Provider>
+          </Auth>
+        )
+
       ) : (
         <Provider store={ store }>
           <Component { ...pageProps } />

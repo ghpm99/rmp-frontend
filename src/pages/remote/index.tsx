@@ -14,7 +14,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 
-function CommandPage(props) {
+function RemotePage(props) {
 
     const [hook, setHook] = useState({
         src: 'https://rmp-server-dev.herokuapp.com/media/screenshot/screenshot.png'
@@ -180,10 +180,14 @@ function CommandPage(props) {
 
 }
 
-CommandPage.auth = {
+RemotePage.auth = {
     role: 'admin',
     loading: <LoadingPage />,
     unauthorized: "/login",
+}
+
+RemotePage.pusher = {
+    name: 'Remote'
 }
 
 export async function getServerSideProps() {
@@ -194,4 +198,4 @@ export async function getServerSideProps() {
     return { props }
 }
 
-export default CommandPage
+export default RemotePage
