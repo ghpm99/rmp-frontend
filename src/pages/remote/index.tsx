@@ -43,12 +43,20 @@ function RemotePage(props) {
     }
 
     const onClickScreenshot = (event) => {
+
         setScreenSize({
             ...screenSize,
             x: event.nativeEvent.offsetX,
             y: event.nativeEvent.offsetY
         })
+
         mouseMoveService(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+
+        if (event.detail === 1) {
+            mouseButtonService('click')
+        } else if (event.detail === 2) {
+            mouseButtonService('double-click')
+        }
     }
 
     return (
@@ -108,13 +116,13 @@ function RemotePage(props) {
                             <div className={ styles.screenshot_container }>
                                 <img
                                     src={ hook.src }
-                                    onClick={onClickScreenshot}
+                                    onClick={ onClickScreenshot }
                                 />
                             </div>
                             <Slider
                                 min={ 0 }
                                 max={ screenSize.screen_width }
-                                value={screenSize.x}
+                                value={ screenSize.x }
                                 onChange={ (event) => setScreenSize({
                                     ...screenSize,
                                     x: event
@@ -126,7 +134,7 @@ function RemotePage(props) {
                                     vertical
                                     min={ 0 }
                                     max={ screenSize.screen_height }
-                                    value={screenSize.y}
+                                    value={ screenSize.y }
                                     onChange={ (event) => setScreenSize({
                                         ...screenSize,
                                         y: event
