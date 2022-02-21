@@ -1,10 +1,6 @@
 
 import { Button, Card, Checkbox, Form, Input, Layout, Typography } from 'antd';
 import { signIn } from 'next-auth/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setToken } from '../../store/features/common/Index';
-import { RootState } from '../../store/store';
-import { createBasicAuth } from '../../util/auth';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;

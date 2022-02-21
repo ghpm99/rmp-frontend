@@ -5,8 +5,8 @@ const initialState = {
 	memory: 0,
 }
 
-export const mediaSlice = createSlice({
-	name: 'media',
+export const statusSlice = createSlice({
+	name: 'status',
 	initialState,
 	reducers: {
 		setCpuAndMemoryValue: (state, action) => {
@@ -16,6 +16,6 @@ export const mediaSlice = createSlice({
 	},
 })
 
-export const {setCpuAndMemoryValue} = mediaSlice.actions
+export const {setCpuAndMemoryValue} = statusSlice.actions
 
-export default mediaSlice.reducer
+export default statusSlice.reducer
