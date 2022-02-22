@@ -28,6 +28,11 @@ function FinancialPage() {
 	const dateFormat = 'DD/MM/YYYY'
 	const customFormat = value => `${value.format(dateFormat)}`
 
+	const formatter = new Intl.NumberFormat('pt-BR', {
+		style: 'currency',
+		currency: 'BRL'
+	})
+
 	const onFinish = (values) => {
 		const newPayment = {
 			'type': values.type,
@@ -35,9 +40,10 @@ function FinancialPage() {
 			'date': moment(values.date).format('YYYY-MM-DD'),
 			'installments': values.installments,
 			'payment_date': moment(values.payment_date).format('YYYY-MM-DD'),
-			'fixed': values.fixed? true : false
+			'fixed': values.fixed ? true : false,
+			'value': values.value
 		}
-		dispatch(saveNewPayment({payment: newPayment}))
+		dispatch(saveNewPayment({ payment: newPayment }))
 	}
 
 	const headerTableFinancial = [
@@ -48,14 +54,19 @@ function FinancialPage() {
 			render: text => text === 0 ? 'Credito' : 'Debito'
 		},
 		{
+			title: 'Data',
+			dataIndex: 'date',
+			key: 'dataIndex'
+		},
+		{
 			title: 'Nome',
 			dataIndex: 'name',
 			key: 'name'
 		},
 		{
-			title: 'Data',
-			dataIndex: 'date',
-			key: 'dataIndex'
+			title: 'Valor',
+			dataIndex: 'value',
+			key: 'value'
 		},
 		{
 			title: 'Parcelas',
@@ -131,7 +142,7 @@ function FinancialPage() {
 								name='date'
 								rules={ [{ required: true, message: 'Selecione a data da entrada' }] }
 							>
-								<DatePicker format={customFormat} />
+								<DatePicker format={ customFormat } />
 							</Form.Item>
 							<Form.Item
 								label='Parcelas'
@@ -145,7 +156,17 @@ function FinancialPage() {
 								name='payment_date'
 								rules={ [{ required: true, message: 'Selecione a data do pagamento' }] }
 							>
-								<DatePicker format={customFormat} />
+								<DatePicker format={ customFormat } />
+							</Form.Item>
+							<Form.Item
+								label='Valor'
+								name='value'
+								rules={ [{ required: true, message: 'Digite o valor' }] }
+							>
+								<InputNumber
+									defaultValue={ 0 }
+									formatter={ value => formatter.format(value) }
+								/>
 							</Form.Item>
 							<Form.Item
 								label='Entrada mensal'
@@ -162,6 +183,13 @@ function FinancialPage() {
 							</Form.Item>
 						</Form>
 						<Divider />
+						<Title level={ 4 }>Relatorio por mes:</Title>
+						<DatePicker
+							format='MM/DD'
+							picker='month'
+							defaultValue={ moment(new Date(), 'MM/DD') }
+						/>
+						<Table columns={ headerTableFinancial } />
 					</Layout>
 				</Content>
 			</Layout>
