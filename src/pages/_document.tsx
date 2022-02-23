@@ -20,7 +20,9 @@ import Document, {
 	render() {
 	  return (
 		<Html>
-		  <Head></Head>
+		  <Head>
+			  <title>Remote Media Player</title>
+		  </Head>
 		  <body>
 			<Main />
 			<NextScript />

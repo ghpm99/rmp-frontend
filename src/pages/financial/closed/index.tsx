@@ -8,7 +8,7 @@ import LoginHeader from '../../../components/loginHeader/Index';
 import MenuCollapsible from '../../../components/menu/Index';
 import { fecthAllPayment, saveNewPayment } from '../../../store/features/financial/Index';
 import { RootState } from '../../../store/store';
-import styles from './Financial.module.css'
+import styles from './Closed.module.css'
 
 
 const { Header, Content, Footer } = Layout;
@@ -90,7 +90,7 @@ function FinancialPage() {
 
 	return (
 		<Layout className={ styles.container }>
-			<MenuCollapsible selected={ ['sub1', '5'] } />
+			<MenuCollapsible selected={ ['sub2', 'closed'] } />
 			<Layout>
 				<Header className={ styles.header } >
 					<LoginHeader />
@@ -98,8 +98,8 @@ function FinancialPage() {
 				<Content>
 					<Breadcrumb className={ styles.breadcrumb }>
 						<Breadcrumb.Item>RMP</Breadcrumb.Item>
-						<Breadcrumb.Item>Rotinas</Breadcrumb.Item>
 						<Breadcrumb.Item>Financeiro</Breadcrumb.Item>
+						<Breadcrumb.Item>Em aberto</Breadcrumb.Item>
 					</Breadcrumb>
 					<Layout>
 						<Title level={ 3 } className={ styles.title }>

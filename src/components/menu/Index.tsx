@@ -1,6 +1,6 @@
 
 import {
-	DesktopOutlined, HddOutlined, HomeOutlined, ScheduleOutlined, SettingOutlined, UserOutlined, YoutubeOutlined
+	DesktopOutlined, HddOutlined, HomeOutlined, ScheduleOutlined, SettingOutlined, UserOutlined, YoutubeOutlined, SnippetsOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { useSession } from 'next-auth/react';
@@ -52,6 +52,23 @@ function MenuCollapsible(props: { selected: string[] }) {
 							<Menu.Item key="5">
 								<Link href={ '/routines/financial' }>
 									Financeiro
+								</Link>
+							</Menu.Item>
+						</SubMenu>
+						<SubMenu key='sub2' icon={ <SnippetsOutlined /> } title='Financeiro'>
+							<Menu.Item key='opened'>
+								<Link href={ '/financial/opened' }>
+									Valores em abertos
+								</Link>
+							</Menu.Item>
+							<Menu.Item key='closed'>
+								<Link href={ '/financial/closed' }>
+									Valores fechados
+								</Link>
+							</Menu.Item>
+							<Menu.Item key='report'>
+								<Link href={'/financial/report'}>
+									Relatorio por mês
 								</Link>
 							</Menu.Item>
 						</SubMenu>
