@@ -15,6 +15,9 @@ const initialState = {
 			error: false,
 			errorMsg: '',
 		},
+		modalFilters: {
+			visible: false
+		}
 	},
 }
 

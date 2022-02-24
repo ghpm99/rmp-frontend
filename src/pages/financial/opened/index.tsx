@@ -1,5 +1,5 @@
 
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button, DatePicker, Form, Input, InputNumber, Layout, Modal, Select, Switch, Table, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -16,10 +16,14 @@ function FinancialPage() {
 
     const { Header, Content, Footer } = Layout;
 
-    const { Title } = Typography
+    const { Title, Text } = Typography
     const { Option } = Select
 
+    const { RangePicker } = DatePicker
+
     const [form] = Form.useForm()
+
+    const [formFilters] = Form.useForm()
 
     const financialStore = useSelector((state: RootState) => state.financial)
     const dispatch = useDispatch()
@@ -36,12 +40,12 @@ function FinancialPage() {
         currency: 'BRL'
     })
 
-    const openModal = () => {
-        dispatch(changeVisibleModal({ modal: 'newPayment', visible: true }))
+    const openModal = (modal) => {
+        dispatch(changeVisibleModal({ modal: modal, visible: true }))
     }
 
-    const closeModal = () => {
-        dispatch(changeVisibleModal({ modal: 'newPayment', visible: false }))
+    const closeModal = (modal) => {
+        dispatch(changeVisibleModal({ modal: modal, visible: false }))
     }
 
     const onOk = () => {
@@ -59,6 +63,7 @@ function FinancialPage() {
             'value': values.value
         }
         dispatch(saveNewPayment({ payment: newPayment }))
+        closeModal('newPayment')
     }
 
     const headerTableFinancial = [
@@ -66,7 +71,18 @@ function FinancialPage() {
             title: 'Tipo',
             dataIndex: 'type',
             key: 'type',
-            render: text => text === 0 ? 'Credito' : 'Debito'
+            render: text => text === 0 ? 'Credito' : 'Debito',
+            filters: [
+                {
+                    text: 'Credito',
+                    value: 0
+                },
+                {
+                    text: 'Debito',
+                    value: 1
+                }
+            ],
+            onFilter: (value, record) => record.type === value
         },
         {
             title: 'Data',
@@ -81,7 +97,8 @@ function FinancialPage() {
         {
             title: 'Valor',
             dataIndex: 'value',
-            key: 'value'
+            key: 'value',
+            render: text => `R$ ${text}`
         },
         {
             title: 'Parcelas',
@@ -103,14 +120,22 @@ function FinancialPage() {
 
     const formItemLayout = {
         labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 },
+            xs: { span: 24 },
+            sm: { span: 8 },
         },
         wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
+            xs: { span: 24 },
+            sm: { span: 16 },
         },
-      };
+    }
+
+    const okFilters = () => {
+        formFilters.submit()
+    }
+
+    const setFilters = (values) => {
+        console.log(values)
+    }
 
     return (
         <Layout className={ styles.container }>
@@ -130,32 +155,74 @@ function FinancialPage() {
                             <Title level={ 3 } className={ styles.title }>
                                 Valores em aberto
                             </Title>
-                            <Button icon={ <PlusOutlined /> } onClick={ openModal }>
-                                Novo
-                            </Button>
+                            <div>
+                                <Button icon={ <PlusOutlined /> } onClick={ () => openModal('newPayment') }>
+                                    Novo
+                                </Button>
+                                <Button icon={ <SearchOutlined /> } onClick={ () => openModal('modalFilters') }>
+                                    Filtrar
+                                </Button>
+                            </div>
+
                         </div>
                         <Table
                             columns={ headerTableFinancial }
                             dataSource={ financialStore.payments.data }
                             loading={ financialStore.payments.loading }
+                            pagination={ {
+                                pageSize: 50
+                            } }
+                            summary={
+                                paymentData => {
+                                    let total = 0
+                                    let totalCredit = 0
+                                    let totalDebit = 0
+                                    paymentData.forEach((payment) => {
+                                        if (payment.type === 0) {
+                                            total = total + parseFloat(payment.value)
+                                            totalCredit = totalCredit + parseFloat(payment.value)
+                                        } else {
+                                            total = total - parseFloat(payment.value)
+                                            totalDebit = totalDebit + parseFloat(payment.value)
+                                        }
+                                    })
+
+                                    return (
+                                        <>
+                                            <Table.Summary.Row>
+                                                <Table.Summary.Cell index={ 0 }>
+                                                    <Text>Total: R$ { total.toFixed(2) }</Text>
+                                                </Table.Summary.Cell>
+                                                <Table.Summary.Cell index={ 1 }>
+                                                    <Text>Total Credito: R$ { totalCredit.toFixed(2) }</Text>
+                                                </Table.Summary.Cell>
+                                                <Table.Summary.Cell index={ 2 }>
+                                                    <Text>Total Debito: R$ { totalDebit.toFixed(2) }</Text>
+                                                </Table.Summary.Cell>
+                                            </Table.Summary.Row>
+                                        </>
+                                    )
+                                }
+                            }
                         />
 
                         <Modal
                             title='Nova entrada'
                             visible={ financialStore.modal.newPayment.visible }
-                            onCancel={ closeModal }
+                            onCancel={ () => closeModal('newPayment') }
                             okButtonProps={ { htmlType: 'submit' } }
                             onOk={ onOk }
                         >
                             <Form
-                                {...formItemLayout}
+                                { ...formItemLayout }
                                 form={ form }
                                 className={ styles.form }
                                 name='payment'
                                 onFinish={ onFinish }
+                                preserve={ false }
                             >
                                 <Form.Item
-                                    style={{width:'auto'}}
+                                    style={ { width: 'auto' } }
                                     label='Tipo'
                                     name='type'
                                     rules={ [{ required: true, message: 'Selecione o tipo de entrada' }] }
@@ -181,28 +248,28 @@ function FinancialPage() {
                                     name='date'
                                     rules={ [{ required: true, message: 'Selecione a data da entrada' }] }
                                 >
-                                    <DatePicker format={ customFormat } style={{width:'100%'}}/>
+                                    <DatePicker format={ customFormat } style={ { width: '100%' } } />
                                 </Form.Item>
                                 <Form.Item
                                     label='Parcelas'
                                     name='installments'
                                     rules={ [{ required: true, message: 'Digite o numero de parcelas' }] }
                                 >
-                                    <InputNumber style={{width:'100%'}}/>
+                                    <InputNumber style={ { width: '100%' } } />
                                 </Form.Item>
                                 <Form.Item
                                     label='Dia de pagamento'
                                     name='payment_date'
                                     rules={ [{ required: true, message: 'Selecione a data do pagamento' }] }
                                 >
-                                    <DatePicker format={ customFormat } style={{width:'100%'}}/>
+                                    <DatePicker format={ customFormat } style={ { width: '100%' } } />
                                 </Form.Item>
                                 <Form.Item
                                     label='Valor'
                                     name='value'
                                     rules={ [{ required: true, message: 'Digite o valor' }] }
                                 >
-                                    <InputNumber style={{width:'100%'}}/>
+                                    <InputNumber style={ { width: '100%' } } />
                                 </Form.Item>
                                 <Form.Item
                                     label='Entrada mensal'
@@ -212,6 +279,96 @@ function FinancialPage() {
                                     <Switch />
                                 </Form.Item>
                             </Form>
+                        </Modal>
+
+                        <Modal
+                            title='Filtro'
+                            visible={ financialStore.modal.modalFilters.visible }
+                            onCancel={ () => closeModal('modalFilters') }
+                            okButtonProps={ { htmlType: 'submit' } }
+                            onOk={ okFilters }
+                        >
+                            <Form
+                                { ...formItemLayout }
+                                form={ formFilters }
+                                className={ styles.form }
+                                name='filter'
+                                onFinish={ setFilters }
+                                preserve={ false }
+                            >
+                                <Form.Item
+                                    style={ { width: 'auto' } }
+                                    label='ID'
+                                    name='id'
+                                >
+                                    <InputNumber style={ { width: '100%' } } />
+                                </Form.Item>
+                                <Form.Item
+                                    style={ { width: 'auto' } }
+                                    label='Tipo'
+                                    name='type'
+                                >
+                                    <Select placeholder='Selecione o tipo de entrada'>
+                                        <Option value=''>
+                                            Todos
+                                        </Option>
+                                        <Option value={ 0 }>
+                                            Credito
+                                        </Option>
+                                        <Option value={ 1 }>
+                                            Debito
+                                        </Option>
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label='Nome'
+                                    name='name'
+                                >
+                                    <Input placeholder='Digite o nome' />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Data'
+                                    name='date'
+                                >
+                                    <RangePicker format={ customFormat } style={ { width: '100%' } } />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Parcelas'
+                                    name='installments'
+                                >
+                                    <InputNumber style={ { width: '100%' } } />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Dia de pagamento'
+                                    name='payment_date'
+                                >
+                                    <RangePicker format={ customFormat } style={ { width: '100%' } } />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Valor'
+                                    name='value'
+                                >
+                                    <InputNumber style={ { width: '100%' } } />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Entrada mensal'
+                                    name='fixed'
+                                    valuePropName='checked'
+                                >
+                                    <Select placeholder='Selecione se é mensalidade'>
+                                        <Option value={ '' }>
+                                            Todos
+                                        </Option>
+                                        <Option value={ true }>
+                                            Sim
+                                        </Option>
+                                        <Option value={ false }>
+                                            Não
+                                        </Option>
+                                    </Select>
+                                </Form.Item>
+                            </Form>
+
                         </Modal>
 
                     </Layout>
