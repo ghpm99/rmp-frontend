@@ -169,9 +169,6 @@ function FinancialPage() {
                             columns={ headerTableFinancial }
                             dataSource={ financialStore.payments.data }
                             loading={ financialStore.payments.loading }
-                            pagination={ {
-                                pageSize: 50
-                            } }
                             summary={
                                 paymentData => {
                                     let total = 0
