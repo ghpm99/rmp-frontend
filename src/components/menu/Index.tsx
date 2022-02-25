@@ -49,11 +49,6 @@ function MenuCollapsible(props: { selected: string[] }) {
 									Kanban
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="5">
-								<Link href={ '/routines/financial' }>
-									Financeiro
-								</Link>
-							</Menu.Item>
 						</SubMenu>
 						<SubMenu key='sub2' icon={ <SnippetsOutlined /> } title='Financeiro'>
 							<Menu.Item key='payments'>
