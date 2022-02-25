@@ -21,10 +21,6 @@ function FinancialPage() {
 	const statusStore = useSelector((state: RootState) => state.financial)
 	const dispatch = useDispatch()
 
-	useEffect(() => {
-		dispatch(fecthAllPayment())
-	}, [])
-
 	const dateFormat = 'DD/MM/YYYY'
 	const customFormat = value => `${value.format(dateFormat)}`
 
@@ -102,87 +98,6 @@ function FinancialPage() {
 						<Breadcrumb.Item>Relatorio</Breadcrumb.Item>
 					</Breadcrumb>
 					<Layout>
-						<Title level={ 3 } className={ styles.title }>
-							Valores em aberto
-						</Title>
-						<Table
-							columns={ headerTableFinancial }
-							dataSource={ statusStore.payments.data }
-							loading={ statusStore.payments.loading }
-						/>
-						<Title level={ 4 } className={ styles.title }>
-							Adicionar nova entrada:
-						</Title>
-						<Form
-							className={ styles.form }
-							name='payment'
-							onFinish={ onFinish }
-						>
-							<Form.Item
-								label='Tipo'
-								name='type'
-								rules={ [{ required: true, message: 'Selecione o tipo de entrada' }] }
-							>
-								<Select placeholder='Selecione o tipo de entrada'>
-									<Option value={ 0 }>
-										Credito
-									</Option>
-									<Option value={ 1 }>
-										Debito
-									</Option>
-								</Select>
-							</Form.Item>
-							<Form.Item
-								label='Nome'
-								name='name'
-								rules={ [{ required: true, message: 'Entre com o nome da entrada' }] }
-							>
-								<Input placeholder='Digite o nome' />
-							</Form.Item>
-							<Form.Item
-								label='Data'
-								name='date'
-								rules={ [{ required: true, message: 'Selecione a data da entrada' }] }
-							>
-								<DatePicker format={ customFormat } />
-							</Form.Item>
-							<Form.Item
-								label='Parcelas'
-								name='installments'
-								rules={ [{ required: true, message: 'Digite o numero de parcelas' }] }
-							>
-								<InputNumber />
-							</Form.Item>
-							<Form.Item
-								label='Dia de pagamento'
-								name='payment_date'
-								rules={ [{ required: true, message: 'Selecione a data do pagamento' }] }
-							>
-								<DatePicker format={ customFormat } />
-							</Form.Item>
-							<Form.Item
-								label='Valor'
-								name='value'
-								rules={ [{ required: true, message: 'Digite o valor' }] }
-							>
-								<InputNumber
-
-								/>
-							</Form.Item>
-							<Form.Item
-								label='Entrada mensal'
-								name='fixed'
-								valuePropName='checked'
-							>
-								<Switch />
-							</Form.Item>
-							<Form.Item>
-								<Button type='primary' htmlType='submit'>
-									Salvar
-								</Button>
-							</Form.Item>
-						</Form>
-						<Divider />
 						<Title level={ 4 }>Relatorio por mes:</Title>
 						<DatePicker
 							format='MM/DD'

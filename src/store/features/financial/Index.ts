@@ -16,15 +16,15 @@ const initialState = {
 			errorMsg: '',
 		},
 		modalFilters: {
-			visible: false
+			visible: false,
 		}
 	},
 }
 
 export const fecthAllPayment = createAsyncThunk(
 	'financial/fecthAllPayment',
-	async () => {
-		const response = await fecthAllPaymentService()
+	async (filters?:financialFilter) => {
+		const response = await fecthAllPaymentService(filters)
 		return response
 	}
 )
@@ -43,7 +43,7 @@ export const financialSlice = createSlice({
 	reducers: {
 		changeVisibleModal: (state, action) => {
 			state.modal[action.payload.modal].visible = action.payload.visible
-		},
+		}
 	},
 	extraReducers: (builder) => {
 		builder

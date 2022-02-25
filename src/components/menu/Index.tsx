@@ -56,14 +56,9 @@ function MenuCollapsible(props: { selected: string[] }) {
 							</Menu.Item>
 						</SubMenu>
 						<SubMenu key='sub2' icon={ <SnippetsOutlined /> } title='Financeiro'>
-							<Menu.Item key='opened'>
-								<Link href={ '/financial/opened' }>
-									Valores em abertos
-								</Link>
-							</Menu.Item>
-							<Menu.Item key='closed'>
-								<Link href={ '/financial/closed' }>
-									Valores fechados
+							<Menu.Item key='payments'>
+								<Link href={ '/financial/payments' }>
+									Pagamentos
 								</Link>
 							</Menu.Item>
 							<Menu.Item key='report'>

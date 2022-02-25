@@ -11,11 +11,17 @@ const apiFinancial = axios.create({
 export default async (req, res) => {
 	const session = await getSession({ req })
 
+	if(!session){
+		res.status(400).send('User not defined')
+		res.end()
+	}
+
 	if (req.method === 'GET') {
 		const response = await apiFinancial.get('/', {
 			headers: {
 				Authorization: `Basic ${session.accessToken}`,
 			},
+			params: req.query
 		})
 		res.status(response.status).send(response.data)
 		res.end()

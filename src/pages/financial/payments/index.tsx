@@ -9,7 +9,7 @@ import LoginHeader from '../../../components/loginHeader/Index';
 import MenuCollapsible from '../../../components/menu/Index';
 import { changeVisibleModal, fecthAllPayment, saveNewPayment } from '../../../store/features/financial/Index';
 import { RootState } from '../../../store/store';
-import styles from './Opened.module.css';
+import styles from './Payments.module.css';
 
 
 function FinancialPage() {
@@ -29,7 +29,9 @@ function FinancialPage() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fecthAllPayment())
+        dispatch(fecthAllPayment({
+            active: true
+        }))
     }, [])
 
     const dateFormat = 'DD/MM/YYYY'
@@ -71,18 +73,7 @@ function FinancialPage() {
             title: 'Tipo',
             dataIndex: 'type',
             key: 'type',
-            render: text => text === 0 ? 'Credito' : 'Debito',
-            filters: [
-                {
-                    text: 'Credito',
-                    value: 0
-                },
-                {
-                    text: 'Debito',
-                    value: 1
-                }
-            ],
-            onFilter: (value, record) => record.type === value
+            render: text => text === 0 ? 'Credito' : 'Debito'
         },
         {
             title: 'Data',
@@ -134,12 +125,41 @@ function FinancialPage() {
     }
 
     const setFilters = (values) => {
-        console.log(values)
+
+        let date__gte
+        let date__lte
+        let payment_date__gte
+        let payment_date__lte
+
+        if (values.date) {
+            date__gte = values.date[0]?.toISOString().slice(0, 10)
+            date__lte = values.date[1]?.toISOString().slice(0, 10)
+        }
+        if (values.payment_date) {
+            payment_date__gte = values.payment_date[0]?.toISOString().slice(0, 10)
+            payment_date__lte = values.payment_date[1]?.toISOString().slice(0, 10)
+        }
+
+        const filters: financialFilter = {
+            type: values.type,
+            name__icontains: values.name,
+            date__gte: date__gte,
+            date__lte: date__lte,
+            installments: values.installments,
+            payment_date__gte: payment_date__gte,
+            payment_date__lte: payment_date__lte,
+            fixed: values.fixed,
+            active: values.active
+        }
+        dispatch(fecthAllPayment(filters))
+        closeModal('modalFilters')
     }
+
+
 
     return (
         <Layout className={ styles.container }>
-            <MenuCollapsible selected={ ['sub2', 'opened'] } />
+            <MenuCollapsible selected={ ['sub2', 'payments'] } />
             <Layout>
                 <Header className={ styles.header } >
                     <LoginHeader />
@@ -295,13 +315,6 @@ function FinancialPage() {
                             >
                                 <Form.Item
                                     style={ { width: 'auto' } }
-                                    label='ID'
-                                    name='id'
-                                >
-                                    <InputNumber style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    style={ { width: 'auto' } }
                                     label='Tipo'
                                     name='type'
                                 >
@@ -327,7 +340,15 @@ function FinancialPage() {
                                     label='Data'
                                     name='date'
                                 >
-                                    <RangePicker format={ customFormat } style={ { width: '100%' } } />
+                                    <RangePicker
+                                        format={ customFormat }
+                                        style={ { width: '100%' } }
+                                        ranges={ {
+                                            Today: [moment(), moment()],
+                                            'Mês atual': [moment().startOf('month'), moment().endOf('month')],
+                                            'Proximo mês': [moment().add(1, 'months').startOf('month'), moment().add(1, 'months').endOf('month')],
+                                        } }
+                                    />
                                 </Form.Item>
                                 <Form.Item
                                     label='Parcelas'
@@ -339,7 +360,15 @@ function FinancialPage() {
                                     label='Dia de pagamento'
                                     name='payment_date'
                                 >
-                                    <RangePicker format={ customFormat } style={ { width: '100%' } } />
+                                    <RangePicker
+                                        format={ customFormat }
+                                        style={ { width: '100%' } }
+                                        ranges={ {
+                                            Today: [moment(), moment()],
+                                            'Mês atual': [moment().startOf('month'), moment().endOf('month')],
+                                            'Proximo mês': [moment().add(1, 'months').startOf('month'), moment().add(1, 'months').endOf('month')],
+                                        } }
+                                    />
                                 </Form.Item>
                                 <Form.Item
                                     label='Valor'
@@ -353,6 +382,23 @@ function FinancialPage() {
                                     valuePropName='checked'
                                 >
                                     <Select placeholder='Selecione se é mensalidade'>
+                                        <Option value={ '' }>
+                                            Todos
+                                        </Option>
+                                        <Option value={ true }>
+                                            Sim
+                                        </Option>
+                                        <Option value={ false }>
+                                            Não
+                                        </Option>
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item
+                                    label='Ativo'
+                                    name='active'
+                                    valuePropName='checked'
+                                >
+                                    <Select placeholder='Selecione se esta em aberto'>
                                         <Option value={ '' }>
                                             Todos
                                         </Option>

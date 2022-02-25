@@ -4,8 +4,10 @@ const apiFinancial = axios.create({
     baseURL: '/api/financial/'
 })
 
-export async function fecthAllPaymentService(){
-    const response = await apiFinancial.get('/')
+export async function fecthAllPaymentService(filters?){
+    const response = await apiFinancial.get('/',{
+        params: filters,
+    })
     return response.data
 }
 
