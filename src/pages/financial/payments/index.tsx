@@ -26,7 +26,8 @@ function FinancialPage() {
 
     useEffect(() => {
         dispatch(fetchAllPayment({
-            active: true
+            active: true,
+            status: 0
         }))
     }, [])
 
