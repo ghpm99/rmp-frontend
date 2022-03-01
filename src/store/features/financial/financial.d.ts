@@ -1,4 +1,5 @@
 declare type financialFilter = {
+    status?: number,
     type?: number,
     name__icontains?: string,
     date__gte?: string,

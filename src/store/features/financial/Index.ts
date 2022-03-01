@@ -1,12 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
-	fecthAllPaymentService,
+	fetchAllPaymentService,
+	fetchDetailPaymentService,
 	saveNewPaymentService,
 } from '../../../services/financialService'
 
 const initialState = {
 	payments: {
 		data: [],
+		loading: true,
+	},
+	paymentDetail: {
+		data: undefined,
 		loading: true,
 	},
 	modal: {
@@ -17,14 +22,22 @@ const initialState = {
 		},
 		modalFilters: {
 			visible: false,
-		}
+		},
 	},
 }
 
-export const fecthAllPayment = createAsyncThunk(
-	'financial/fecthAllPayment',
-	async (filters?:financialFilter) => {
-		const response = await fecthAllPaymentService(filters)
+export const fetchAllPayment = createAsyncThunk(
+	'financial/fetchAllPayment',
+	async (filters?: financialFilter) => {
+		const response = await fetchAllPaymentService(filters)
+		return response
+	}
+)
+
+export const fetchPaymentDetails = createAsyncThunk(
+	'financial/fetchPaymentDetails',
+	async (id: number) => {
+		const response = await fetchDetailPaymentService(id)
 		return response
 	}
 )
@@ -43,23 +56,56 @@ export const financialSlice = createSlice({
 	reducers: {
 		changeVisibleModal: (state, action) => {
 			state.modal[action.payload.modal].visible = action.payload.visible
+		},
+		changeNamePaymentDetails: (state, action) => {
+			state.paymentDetail.data.name = action.payload
+		},
+		changeTypePaymentDetails: (state, action) => {
+			state.paymentDetail.data.type = action.payload
+		},
+		changeFixedPaymentDetails: (state, action) => {
+			state.paymentDetail.data.fixed = action.payload
+		},
+		changeActivePaymentDetails: (state, action) => {
+			state.paymentDetail.data.active = action.payload
+		},
+		changePaymentDatePaymentDetails: (state, action) => {
+			state.paymentDetail.data.payment_date = action.payload
+		},
+		changeValuePaymentDetails: (state, action) => {
+			state.paymentDetail.data.value = action.payload
 		}
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fecthAllPayment.pending, (state) => {
+			.addCase(fetchAllPayment.pending, (state) => {
 				state.payments.loading = true
 			})
-			.addCase(fecthAllPayment.fulfilled, (state, action) => {
+			.addCase(fetchAllPayment.fulfilled, (state, action) => {
 				state.payments.data = action.payload.data
 				state.payments.loading = false
 			})
 			.addCase(saveNewPayment.fulfilled, (state, action) => {
 				state.payments.data.push(action.payload)
 			})
+			.addCase(fetchPaymentDetails.pending, (state) => {
+				state.paymentDetail.loading = true
+			})
+			.addCase(fetchPaymentDetails.fulfilled, (state, action) => {
+				state.paymentDetail.data = action.payload.data
+				state.paymentDetail.loading = false
+			})
 	},
 })
 
-export const { changeVisibleModal } = financialSlice.actions
+export const {
+	changeVisibleModal,
+	changeNamePaymentDetails,
+	changeTypePaymentDetails,
+	changeFixedPaymentDetails,
+	changeActivePaymentDetails,
+	changePaymentDatePaymentDetails,
+	changeValuePaymentDetails
+} = financialSlice.actions
 
 export default financialSlice.reducer

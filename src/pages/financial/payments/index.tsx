@@ -1,46 +1,34 @@
 
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, DatePicker, Form, Input, InputNumber, Layout, Modal, Select, Switch, Table, Typography } from 'antd';
+import { Breadcrumb, Button, Layout, Table, Typography } from 'antd';
 import moment from 'moment';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingPage from '../../../components/loadingPage/Index';
 import LoginHeader from '../../../components/loginHeader/Index';
 import MenuCollapsible from '../../../components/menu/Index';
-import { changeVisibleModal, fecthAllPayment, saveNewPayment } from '../../../store/features/financial/Index';
+import ModalFilter from '../../../components/payments/modalFilter';
+import ModalNew from '../../../components/payments/modalNew';
+import { changeVisibleModal, fetchAllPayment, saveNewPayment } from '../../../store/features/financial/Index';
 import { RootState } from '../../../store/store';
 import styles from './Payments.module.css';
 
 
 function FinancialPage() {
 
-    const { Header, Content, Footer } = Layout;
+    const { Header, Content } = Layout;
 
-    const { Title, Text } = Typography
-    const { Option } = Select
-
-    const { RangePicker } = DatePicker
-
-    const [form] = Form.useForm()
-
-    const [formFilters] = Form.useForm()
+    const { Title } = Typography
 
     const financialStore = useSelector((state: RootState) => state.financial)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fecthAllPayment({
+        dispatch(fetchAllPayment({
             active: true
         }))
     }, [])
-
-    const dateFormat = 'DD/MM/YYYY'
-    const customFormat = value => `${value.format(dateFormat)}`
-
-    const formatter = new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    })
 
     const openModal = (modal) => {
         dispatch(changeVisibleModal({ modal: modal, visible: true }))
@@ -48,10 +36,6 @@ function FinancialPage() {
 
     const closeModal = (modal) => {
         dispatch(changeVisibleModal({ modal: modal, visible: false }))
-    }
-
-    const onOk = () => {
-        form.submit()
     }
 
     const onFinish = (values) => {
@@ -69,6 +53,12 @@ function FinancialPage() {
     }
 
     const headerTableFinancial = [
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: value => value === 0 ? 'Em aberto' : 'Baixado'
+        },
         {
             title: 'Tipo',
             dataIndex: 'type',
@@ -106,23 +96,14 @@ function FinancialPage() {
             dataIndex: 'fixed',
             key: 'fixed',
             render: value => value ? 'Sim' : 'Não'
+        },
+        {
+            title: 'Ações',
+            dataIndex: 'id',
+            key: 'id',
+            render: value => <Link href={`/financial/payments/details/${value}`}>Detalhes</Link>
         }
     ]
-
-    const formItemLayout = {
-        labelCol: {
-            xs: { span: 24 },
-            sm: { span: 8 },
-        },
-        wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
-        },
-    }
-
-    const okFilters = () => {
-        formFilters.submit()
-    }
 
     const setFilters = (values) => {
 
@@ -141,6 +122,7 @@ function FinancialPage() {
         }
 
         const filters: financialFilter = {
+            status: values.status,
             type: values.type,
             name__icontains: values.name,
             date__gte: date__gte,
@@ -151,11 +133,9 @@ function FinancialPage() {
             fixed: values.fixed,
             active: values.active
         }
-        dispatch(fecthAllPayment(filters))
+        dispatch(fetchAllPayment(filters))
         closeModal('modalFilters')
     }
-
-
 
     return (
         <Layout className={ styles.container }>
@@ -193,235 +173,61 @@ function FinancialPage() {
                             dataSource={ financialStore.payments.data }
                             loading={ financialStore.payments.loading }
                             summary={
-                                paymentData => {
-                                    let total = 0
-                                    let totalCredit = 0
-                                    let totalDebit = 0
-                                    paymentData.forEach((payment) => {
-                                        if (payment.type === 0) {
-                                            total = total + parseFloat(payment.value)
-                                            totalCredit = totalCredit + parseFloat(payment.value)
-                                        } else {
-                                            total = total - parseFloat(payment.value)
-                                            totalDebit = totalDebit + parseFloat(payment.value)
-                                        }
-                                    })
-
-                                    return (
-                                        <>
-                                            <Table.Summary.Row>
-                                                <Table.Summary.Cell index={ 0 }>
-                                                    <Text>Total: R$ { total.toFixed(2) }</Text>
-                                                </Table.Summary.Cell>
-                                                <Table.Summary.Cell index={ 1 }>
-                                                    <Text>Total Credito: R$ { totalCredit.toFixed(2) }</Text>
-                                                </Table.Summary.Cell>
-                                                <Table.Summary.Cell index={ 2 }>
-                                                    <Text>Total Debito: R$ { totalDebit.toFixed(2) }</Text>
-                                                </Table.Summary.Cell>
-                                            </Table.Summary.Row>
-                                        </>
-                                    )
-                                }
+                                paymentData => <TableSummary paymentData={paymentData}/>
                             }
                         />
 
-                        <Modal
-                            title='Nova entrada'
+                        <ModalNew
                             visible={ financialStore.modal.newPayment.visible }
                             onCancel={ () => closeModal('newPayment') }
-                            okButtonProps={ { htmlType: 'submit' } }
-                            onOk={ onOk }
-                        >
-                            <Form
-                                { ...formItemLayout }
-                                form={ form }
-                                className={ styles.form }
-                                name='payment'
-                                onFinish={ onFinish }
-                                preserve={ false }
-                            >
-                                <Form.Item
-                                    style={ { width: 'auto' } }
-                                    label='Tipo'
-                                    name='type'
-                                    rules={ [{ required: true, message: 'Selecione o tipo de entrada' }] }
-                                >
-                                    <Select placeholder='Selecione o tipo de entrada'>
-                                        <Option value={ 0 }>
-                                            Credito
-                                        </Option>
-                                        <Option value={ 1 }>
-                                            Debito
-                                        </Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    label='Nome'
-                                    name='name'
-                                    rules={ [{ required: true, message: 'Entre com o nome da entrada' }] }
-                                >
-                                    <Input placeholder='Digite o nome' />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Data'
-                                    name='date'
-                                    rules={ [{ required: true, message: 'Selecione a data da entrada' }] }
-                                >
-                                    <DatePicker format={ customFormat } style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Parcelas'
-                                    name='installments'
-                                    rules={ [{ required: true, message: 'Digite o numero de parcelas' }] }
-                                >
-                                    <InputNumber style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Dia de pagamento'
-                                    name='payment_date'
-                                    rules={ [{ required: true, message: 'Selecione a data do pagamento' }] }
-                                >
-                                    <DatePicker format={ customFormat } style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Valor'
-                                    name='value'
-                                    rules={ [{ required: true, message: 'Digite o valor' }] }
-                                >
-                                    <InputNumber style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Entrada mensal'
-                                    name='fixed'
-                                    valuePropName='checked'
-                                >
-                                    <Switch />
-                                </Form.Item>
-                            </Form>
-                        </Modal>
+                            onFinish={ onFinish }
+                        />
 
-                        <Modal
-                            title='Filtro'
+                        <ModalFilter
                             visible={ financialStore.modal.modalFilters.visible }
                             onCancel={ () => closeModal('modalFilters') }
-                            okButtonProps={ { htmlType: 'submit' } }
-                            onOk={ okFilters }
-                        >
-                            <Form
-                                { ...formItemLayout }
-                                form={ formFilters }
-                                className={ styles.form }
-                                name='filter'
-                                onFinish={ setFilters }
-                                preserve={ false }
-                            >
-                                <Form.Item
-                                    style={ { width: 'auto' } }
-                                    label='Tipo'
-                                    name='type'
-                                >
-                                    <Select placeholder='Selecione o tipo de entrada'>
-                                        <Option value=''>
-                                            Todos
-                                        </Option>
-                                        <Option value={ 0 }>
-                                            Credito
-                                        </Option>
-                                        <Option value={ 1 }>
-                                            Debito
-                                        </Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    label='Nome'
-                                    name='name'
-                                >
-                                    <Input placeholder='Digite o nome' />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Data'
-                                    name='date'
-                                >
-                                    <RangePicker
-                                        format={ customFormat }
-                                        style={ { width: '100%' } }
-                                        ranges={ {
-                                            Today: [moment(), moment()],
-                                            'Mês atual': [moment().startOf('month'), moment().endOf('month')],
-                                            'Proximo mês': [moment().add(1, 'months').startOf('month'), moment().add(1, 'months').endOf('month')],
-                                        } }
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Parcelas'
-                                    name='installments'
-                                >
-                                    <InputNumber style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Dia de pagamento'
-                                    name='payment_date'
-                                >
-                                    <RangePicker
-                                        format={ customFormat }
-                                        style={ { width: '100%' } }
-                                        ranges={ {
-                                            Today: [moment(), moment()],
-                                            'Mês atual': [moment().startOf('month'), moment().endOf('month')],
-                                            'Proximo mês': [moment().add(1, 'months').startOf('month'), moment().add(1, 'months').endOf('month')],
-                                        } }
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Valor'
-                                    name='value'
-                                >
-                                    <InputNumber style={ { width: '100%' } } />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Entrada mensal'
-                                    name='fixed'
-                                    valuePropName='checked'
-                                >
-                                    <Select placeholder='Selecione se é mensalidade'>
-                                        <Option value={ '' }>
-                                            Todos
-                                        </Option>
-                                        <Option value={ true }>
-                                            Sim
-                                        </Option>
-                                        <Option value={ false }>
-                                            Não
-                                        </Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    label='Ativo'
-                                    name='active'
-                                    valuePropName='checked'
-                                >
-                                    <Select placeholder='Selecione se esta em aberto'>
-                                        <Option value={ '' }>
-                                            Todos
-                                        </Option>
-                                        <Option value={ true }>
-                                            Sim
-                                        </Option>
-                                        <Option value={ false }>
-                                            Não
-                                        </Option>
-                                    </Select>
-                                </Form.Item>
-                            </Form>
-
-                        </Modal>
+                            setFilters={ setFilters }
+                        />
 
                     </Layout>
                 </Content>
             </Layout>
         </Layout>
 
+    )
+}
+
+function TableSummary(props) {
+
+    const {Text} = Typography
+
+    let total = 0
+    let totalCredit = 0
+    let totalDebit = 0
+    props.paymentData.forEach((payment) => {
+        if (payment.type === 0) {
+            total = total + parseFloat(payment.value)
+            totalCredit = totalCredit + parseFloat(payment.value)
+        } else {
+            total = total - parseFloat(payment.value)
+            totalDebit = totalDebit + parseFloat(payment.value)
+        }
+    })
+
+    return (
+        <>
+            <Table.Summary.Row>
+                <Table.Summary.Cell index={ 0 }>
+                    <Text>Total: R$ { total.toFixed(2) }</Text>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={ 1 }>
+                    <Text>Total Credito: R$ { totalCredit.toFixed(2) }</Text>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={ 2 }>
+                    <Text>Total Debito: R$ { totalDebit.toFixed(2) }</Text>
+                </Table.Summary.Cell>
+            </Table.Summary.Row>
+        </>
     )
 }
 

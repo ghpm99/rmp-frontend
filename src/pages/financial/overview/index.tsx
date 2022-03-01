@@ -9,7 +9,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { useEffect } from 'react'
-import { fecthAllPayment } from '../../../store/features/financial/Index'
+import { fetchAllPayment } from '../../../store/features/financial/Index'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -18,7 +18,7 @@ function Overview() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fecthAllPayment({}))
+    dispatch(fetchAllPayment({}))
   }, [])
 
   const findLabelName = (date) => {
@@ -69,7 +69,7 @@ function Overview() {
   const dataCredit = labels.map(label => {
     const creditArray = financialStore.payments.data
       .filter(payment => payment.type === 0)
-      .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
+      .filter(payment => label === findLabelName(payment.payment_date))
       .map(payment => payment.value)
 
     let valueCredit = 0
@@ -85,7 +85,7 @@ function Overview() {
   const dataDebit = labels.map(label => {
     const debitArray = financialStore.payments.data
       .filter(payment => payment.type === 1)
-      .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
+      .filter(payment => label === findLabelName(payment.payment_date))
       .map(payment => payment.value)
 
     let valueDebit = 0
