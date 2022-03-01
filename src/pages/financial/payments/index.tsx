@@ -186,9 +186,9 @@ function FinancialPage() {
 
                         </div>
                         <Table
-                            pagination={{
+                            pagination={ {
                                 showSizeChanger: true
-                            }}
+                            } }
                             columns={ headerTableFinancial }
                             dataSource={ financialStore.payments.data }
                             loading={ financialStore.payments.loading }
