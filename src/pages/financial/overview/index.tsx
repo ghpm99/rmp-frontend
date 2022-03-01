@@ -5,30 +5,13 @@ import LoginHeader from '../../../components/loginHeader/Index'
 import MenuCollapsible from '../../../components/menu/Index'
 import styles from './Overview.module.css'
 import { Line } from 'react-chartjs-2'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { useEffect } from 'react'
 import { fecthAllPayment } from '../../../store/features/financial/Index'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 function Overview() {
   const financialStore = useSelector((state: RootState) => state.financial)
@@ -90,7 +73,7 @@ function Overview() {
   dataCredit = labels.map(label => {
     const creditArray = financialStore.payments.data
       .filter(payment => payment.type === 0)
-      .filter(payment => label === findLabelName(payment.payment_date))
+      .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
       .map(payment => payment.value)
 
     let valueCredit = 0
@@ -106,7 +89,7 @@ function Overview() {
   dataDebit = labels.map(label => {
     const debitArray = financialStore.payments.data
       .filter(payment => payment.type === 1)
-      .filter(payment => label === findLabelName(payment.payment_date))
+      .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
       .map(payment => payment.value)
 
     let valueDebit = 0
