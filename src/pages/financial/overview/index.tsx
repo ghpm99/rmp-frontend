@@ -55,10 +55,6 @@ function Overview() {
 
   const labels = []
 
-  let dataCredit = []
-
-  let dataDebit = []
-
   financialStore.payments.data.forEach((payment) => {
 
     const labelName = findLabelName(payment.payment_date)
@@ -70,7 +66,7 @@ function Overview() {
     }
   })
 
-  dataCredit = labels.map(label => {
+  const dataCredit = labels.map(label => {
     const creditArray = financialStore.payments.data
       .filter(payment => payment.type === 0)
       .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
@@ -86,7 +82,7 @@ function Overview() {
 
   })
 
-  dataDebit = labels.map(label => {
+  const dataDebit = labels.map(label => {
     const debitArray = financialStore.payments.data
       .filter(payment => payment.type === 1)
       .filter(payment => label === findLabelName(payment.payment_date) || payment.fixed)
@@ -100,6 +96,11 @@ function Overview() {
 
     return valueDebit
 
+  })
+
+  const dataDif = dataCredit.map((credit, index) => {
+    const valueDebit = dataDebit[index]
+    return credit - valueDebit
   })
 
   const data = {
@@ -117,6 +118,12 @@ function Overview() {
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
+      {
+        label: 'Diferença',
+        data: dataDif,
+        borderColor: 'rgb(99, 255, 138)',
+        backgroundColor: 'rgba(99, 255, 138, 0.5)',
+      }
     ],
   }
 
