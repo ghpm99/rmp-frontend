@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
 	fetchAllPaymentService,
 	fetchDetailPaymentService,
+	fetchPaymentReportService,
 	saveNewPaymentService,
 } from '../../../services/financialService'
 
@@ -9,21 +10,25 @@ const initialState = {
 	payments: {
 		data: [],
 		loading: true,
+		modal: {
+			newPayment: {
+				visible: false,
+				error: false,
+				errorMsg: '',
+			},
+			modalFilters: {
+				visible: false,
+			},
+		},
 	},
 	paymentDetail: {
 		data: undefined,
 		loading: true,
 	},
-	modal: {
-		newPayment: {
-			visible: false,
-			error: false,
-			errorMsg: '',
-		},
-		modalFilters: {
-			visible: false,
-		},
-	},
+	paymentReport: {
+		loading: true,
+		data: []
+	}
 }
 
 export const fetchAllPayment = createAsyncThunk(
@@ -50,12 +55,20 @@ export const saveNewPayment = createAsyncThunk(
 	}
 )
 
+export const fetchPaymentReport = createAsyncThunk(
+	'financial/fetchPaymentReport',
+	async () => {
+		const response = await fetchPaymentReportService()
+		return response
+	}
+)
+
 export const financialSlice = createSlice({
 	name: 'financial',
 	initialState,
 	reducers: {
 		changeVisibleModal: (state, action) => {
-			state.modal[action.payload.modal].visible = action.payload.visible
+			state.payments.modal[action.payload.modal].visible = action.payload.visible
 		},
 		changeNamePaymentDetails: (state, action) => {
 			state.paymentDetail.data.name = action.payload
@@ -94,6 +107,13 @@ export const financialSlice = createSlice({
 			.addCase(fetchPaymentDetails.fulfilled, (state, action) => {
 				state.paymentDetail.data = action.payload.data
 				state.paymentDetail.loading = false
+			})
+			.addCase(fetchPaymentReport.pending, (state) => {
+				state.paymentReport.loading = true
+			})
+			.addCase(fetchPaymentReport.fulfilled, (state, action) => {
+				state.paymentReport.loading = false
+				state.paymentReport.data = action.payload.data
 			})
 	},
 })

@@ -9,7 +9,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { useEffect } from 'react'
-import { fetchAllPayment } from '../../../store/features/financial/Index'
+import { fetchAllPayment, fetchPaymentReport } from '../../../store/features/financial/Index'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -19,6 +19,7 @@ function Overview() {
 
   useEffect(() => {
     dispatch(fetchAllPayment({}))
+    dispatch(fetchPaymentReport())
   }, [])
 
   const findLabelName = (date) => {

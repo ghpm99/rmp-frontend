@@ -19,7 +19,7 @@ export default function PaymentDetails() {
     const router = useRouter()
     const { id } = router.query
 
-    const financialStore = useSelector((state: RootState) => state.financial)
+    const financialStore = useSelector((state: RootState) => state.financial.paymentDetail)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -29,10 +29,10 @@ export default function PaymentDetails() {
         }
     }, [id])
 
-    const date = new Date(financialStore.paymentDetail.data?.date).toLocaleDateString()
+    const date = new Date(financialStore.data?.date).toLocaleDateString()
 
     const save = (event) => {
-        savePaymentDetailService(id, financialStore.paymentDetail.data)
+        savePaymentDetailService(id, financialStore.data)
     }
 
     const changeName = (event) => {
@@ -62,9 +62,9 @@ export default function PaymentDetails() {
     }
 
     const payoff = (event) => {
-        payoffPaymentService(financialStore.paymentDetail.data.id).then(data => {
+        payoffPaymentService(financialStore.data.id).then(data => {
             console.log(data)
-            dispatch(fetchPaymentDetails(financialStore.paymentDetail.data.id))
+            dispatch(fetchPaymentDetails(financialStore.data.id))
         })
     }
 
@@ -83,10 +83,10 @@ export default function PaymentDetails() {
                         <Breadcrumb.Item>Detalhes</Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout className={ styles.container_labels }>
-                        <Card loading={ financialStore.paymentDetail.loading }>
+                        <Card loading={ financialStore.loading }>
                             <div className={ styles.label_detail }>
                                 <div className={ styles.label }>
-                                    ID: { financialStore.paymentDetail.data?.id }
+                                    ID: { financialStore.data?.id }
                                 </div>
                             </div>
                             <div className={ styles.label_detail }>
@@ -97,7 +97,7 @@ export default function PaymentDetails() {
                                     style={ { margin: '0' } }
                                     editable={ { onChange: changeName } }
                                 >
-                                    { financialStore.paymentDetail.data?.name }
+                                    { financialStore.data?.name }
                                 </Paragraph>
                             </div>
                             <div className={ styles.label_detail }>
@@ -113,7 +113,7 @@ export default function PaymentDetails() {
                                     Status:
                                 </div>
                                 <div>
-                                    { financialStore.paymentDetail.data?.status === 0 ? 'Em aberto' : 'Baixado' }
+                                    { financialStore.data?.status === 0 ? 'Em aberto' : 'Baixado' }
                                 </div>
                             </div>
                             <div className={ styles.label_detail }>
@@ -121,7 +121,7 @@ export default function PaymentDetails() {
                                     Dia de pagamento:
                                 </div>
                                 <DatePicker
-                                    value={ moment(financialStore.paymentDetail.data?.payment_date) }
+                                    value={ moment(financialStore.data?.payment_date) }
                                     format='DD/MM/YYYY'
                                     onChange={ changePaymentDate }
                                 />
@@ -132,7 +132,7 @@ export default function PaymentDetails() {
                                 </div>
                                 <Select
                                     placeholder='Selecione o tipo de entrada'
-                                    value={ financialStore.paymentDetail.data?.type }
+                                    value={ financialStore.data?.type }
                                     onChange={ changeType }
                                 >
                                     <Option value={ 0 }>
@@ -148,13 +148,13 @@ export default function PaymentDetails() {
                                     Parcelas:
                                 </div>
                                 <div>
-                                    { financialStore.paymentDetail.data?.installments }
+                                    { financialStore.data?.installments }
                                 </div>
                             </div>
                             <div className={ styles.label_detail }>
                                 <div>
                                     <Checkbox
-                                        checked={ financialStore.paymentDetail.data?.fixed }
+                                        checked={ financialStore.data?.fixed }
                                         onChange={ changeFixed }
                                     >
                                         Fixo
@@ -164,7 +164,7 @@ export default function PaymentDetails() {
                             <div className={ styles.label_detail }>
                                 <div>
                                     <Checkbox
-                                        checked={ financialStore.paymentDetail.data?.active }
+                                        checked={ financialStore.data?.active }
                                         onChange={ changeActive }
                                     >
                                         Ativo
@@ -176,13 +176,13 @@ export default function PaymentDetails() {
                                     Valor:
                                 </div>
                                 <InputNumber
-                                    value={ financialStore.paymentDetail.data?.value }
+                                    value={ financialStore.data?.value }
                                     onChange={ changeValue }
                                 />
                             </div>
                             <div className={styles.buttons}>
                                 {
-                                    financialStore.paymentDetail.data?.status === 0 ? (
+                                    financialStore.data?.status === 0 ? (
                                         <Button
                                             danger
                                             type='default'

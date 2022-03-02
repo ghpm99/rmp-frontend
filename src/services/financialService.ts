@@ -30,3 +30,8 @@ export async function payoffPaymentService(id){
     const response = await apiFinancial.post(`/payoff/${id}`)
     return response.data
 }
+
+export async function fetchPaymentReportService(){
+    const response = await apiFinancial.get('/report/')
+    return response.data
+}

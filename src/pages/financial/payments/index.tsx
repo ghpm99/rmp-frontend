@@ -21,7 +21,7 @@ function FinancialPage() {
 
     const { Title } = Typography
 
-    const financialStore = useSelector((state: RootState) => state.financial)
+    const financialStore = useSelector((state: RootState) => state.financial.payments)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -171,8 +171,8 @@ function FinancialPage() {
                                 showSizeChanger: true
                             } }
                             columns={ headerTableFinancial }
-                            dataSource={ financialStore.payments.data }
-                            loading={ financialStore.payments.loading }
+                            dataSource={ financialStore.data }
+                            loading={ financialStore.loading }
                             summary={
                                 paymentData => <TableSummary paymentData={paymentData}/>
                             }
