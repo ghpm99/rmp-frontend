@@ -33,20 +33,20 @@ function MenuCollapsible(props: { selected: string[] }) {
 				</Menu.Item>
 				{ status === 'authenticated' && (
 					<>
-						<Menu.Item key="2" icon={ <DesktopOutlined /> }>
-							<Link href={ '/command' }>
-								Comando
-							</Link>
-						</Menu.Item>
-						<Menu.Item key="3" icon={ <DesktopOutlined /> }>
-							<Link href={ '/remote' }>
-								Remoto
-							</Link>
-						</Menu.Item>
-						<SubMenu key="sub1" icon={ <ScheduleOutlined /> } title="Rotinas">
-							<Menu.Item key="4">
-								<Link href={ '/routines/kanban' }>
-									Kanban
+						<SubMenu key='' icon={ <DesktopOutlined /> } title='Remoto'>
+							<Menu.Item key="2" icon={ <DesktopOutlined /> }>
+								<Link href={ '/command' }>
+									Comando
+								</Link>
+							</Menu.Item>
+							<Menu.Item key="3" icon={ <DesktopOutlined /> }>
+								<Link href={ '/remote' }>
+									Remoto
+								</Link>
+							</Menu.Item>
+							<Menu.Item key="6" icon={ <HddOutlined /> }>
+								<Link href={ '/status' }>
+									Status
 								</Link>
 							</Menu.Item>
 						</SubMenu>
@@ -62,16 +62,18 @@ function MenuCollapsible(props: { selected: string[] }) {
 								</Link>
 							</Menu.Item>
 							<Menu.Item key='report'>
-								<Link href={'/financial/report'}>
+								<Link href={ '/financial/report' }>
 									Relatorio por mês
 								</Link>
 							</Menu.Item>
 						</SubMenu>
-						<Menu.Item key="6" icon={ <HddOutlined /> }>
-							<Link href={ '/status' }>
-								Status
-							</Link>
-						</Menu.Item>
+						<SubMenu key="sub1" icon={ <ScheduleOutlined /> } title="Rotinas">
+							<Menu.Item key="4">
+								<Link href={ '/routines/kanban' }>
+									Kanban
+								</Link>
+							</Menu.Item>
+						</SubMenu>
 						<Menu.Item key="7" icon={ <SettingOutlined /> }>
 							<Link href={ '/server' }>
 								Servidor

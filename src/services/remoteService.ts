@@ -36,3 +36,8 @@ export async function mouseButtonService(button) {
     const response = await apiRemote.post('mouseButton', {button: button})
     return response.data
 }
+
+export async function mouseScrollService(value) {
+	const response = await apiRemote.post('scroll', {value: value})
+	return response.data
+}

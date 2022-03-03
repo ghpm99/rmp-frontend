@@ -44,17 +44,17 @@ function Overview() {
   }
 
   const data = {
-    labels: financialStore.data.map(data => data.label),
+    labels: financialStore.open.map(data => data.label),
     datasets: [
       {
         label: 'Credito',
-        data: financialStore.data.map(data => data.credit),
+        data: financialStore.open.map(data => data.credit),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
       {
         label: 'Debito',
-        data: financialStore.data.map(data => data.debit),
+        data: financialStore.open.map(data => data.debit),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       }
@@ -76,7 +76,7 @@ function Overview() {
 
   const labels = ['Ativo']
 
-  const fixedCreditData = parseFloat(financialStore.data.map(data => {
+  const fixedCreditData = parseFloat(financialStore.open.map(data => {
     if (data.fixed_credit) {
       return parseFloat(data.fixed_credit)
     } else {
@@ -84,7 +84,7 @@ function Overview() {
     }
   }).reduce(((accum, curr) => accum + curr), 0).toFixed(2))
 
-  const fixedDebitData = parseFloat(financialStore.data.map(data => {
+  const fixedDebitData = parseFloat(financialStore.open.map(data => {
     if (data.fixed_debit) {
       return parseFloat(data.fixed_debit)
     } else {
@@ -130,7 +130,7 @@ function Overview() {
     },
   }
 
-  const valueCreditWithFixed = financialStore.data.map(data => {
+  const valueCreditWithFixed = financialStore.open.map(data => {
     if (data.credit) {
       return parseFloat(data.credit) + fixedCreditData
     } else {
@@ -138,7 +138,7 @@ function Overview() {
     }
   })
 
-  const valueDebitWithFixed = financialStore.data.map(data => {
+  const valueDebitWithFixed = financialStore.open.map(data => {
     if (data.debit) {
       return parseFloat(data.debit) + fixedDebitData
     } else {
@@ -149,7 +149,7 @@ function Overview() {
   const valueDifWithFixed = valueCreditWithFixed.map((credit, index) => credit - valueDebitWithFixed[index] )
 
   const dataAll = {
-    labels: financialStore.data.map(data => data.label),
+    labels: financialStore.open.map(data => data.label),
     datasets: [
       {
         label: 'Credito',
@@ -172,6 +172,46 @@ function Overview() {
     ],
   }
 
+  const optionsClosed = {
+    responsive: true,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Relatorio pagamentos baixados',
+      },
+    },
+    scales: {
+      y: {
+        type: 'linear' as const,
+        display: true,
+        position: 'left' as const,
+      }
+    },
+  }
+
+  const dataClosed = {
+    labels: financialStore.closed.map(data => data.label),
+    datasets: [
+      {
+        label: 'Credito',
+        data: financialStore.closed.map(data => data.credit),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+      {
+        label: 'Debito',
+        data: financialStore.closed.map(data => data.debit),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      }
+    ],
+  }
+
   return (
     <Layout className={ styles.container }>
       <MenuCollapsible selected={ ['sub2', 'overview'] } />
@@ -187,6 +227,7 @@ function Overview() {
           </Breadcrumb>
           <Layout>
             <Line data={ dataAll } options={ optionsAll } width={ 400 } height={ 200 } />
+            <Line data={dataClosed} options={optionsClosed} width={ 400 } height={ 200 } />
             <Line data={ data } options={ options } width={ 400 } height={ 200 } />
             <Bar data={ dataFixed } options={ optionsFixed } width={ 400 } height={ 200 } />
           </Layout>

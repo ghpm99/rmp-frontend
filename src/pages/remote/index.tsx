@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
-import { hotkeyService, keyPressService, mouseButtonService, mouseMoveService, screenSizeService } from '../../services/remoteService';
+import { hotkeyService, keyPressService, mouseButtonService, mouseMoveService, mouseScrollService, screenSizeService } from '../../services/remoteService';
 import styles from './Remote.module.css';
 import Pusher from 'react-pusher'
 
@@ -113,11 +113,57 @@ function RemotePage(props) {
                             </Button>
                         </Input.Group>
                         <div className={ styles.mouse_container }>
-                            <div className={ styles.screenshot_container }>
-                                <img
-                                    src={ hook.src }
-                                    onClick={ onClickScreenshot }
-                                />
+                            <div className={ styles.commands }>
+                                <div className={ styles.buttons }>
+                                    <Button
+                                        type='primary'
+                                        className={ styles.buttons_mouse }
+                                        onClick={ () => mouseButtonService('click') }
+                                    >
+                                        Clicar
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        className={ styles.buttons_mouse }
+                                        onClick={ () => mouseButtonService('double-click') }
+                                    >
+                                        Click duplo
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        className={ styles.buttons_mouse }
+                                        onClick={ () => mouseButtonService('click-right') }
+                                    >
+                                        Click direito
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        className={ styles.buttons_mouse }
+                                        onClick={ () => mouseScrollService(10) }
+                                    >
+                                        Scroll up
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        className={ styles.buttons_mouse }
+                                        onClick={ () => mouseScrollService(-10) }
+                                    >
+                                        Scroll down
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
+                                        className={ styles.buttons_mouse }
+                                    >
+                                        Mover
+                                    </Button>
+                                </div>
+                                <div className={ styles.screenshot_container }>
+                                    <img
+                                        src={ hook.src }
+                                        onClick={ onClickScreenshot }
+                                    />
+                                </div>
                             </div>
                             <Slider
                                 min={ 0 }
@@ -140,36 +186,6 @@ function RemotePage(props) {
                                         y: event
                                     }) }
                                 />
-                            </div>
-                            <div className={ styles.buttons }>
-                                <Button
-                                    type='primary'
-                                    onClick={ () => mouseMoveService(screenSize.x, screenSize.y) }
-                                    className={ styles.buttons_mouse }
-                                >
-                                    Mover
-                                </Button>
-                                <Button
-                                    type='primary'
-                                    className={ styles.buttons_mouse }
-                                    onClick={ () => mouseButtonService('click') }
-                                >
-                                    Clicar
-                                </Button>
-                                <Button
-                                    type='primary'
-                                    className={ styles.buttons_mouse }
-                                    onClick={ () => mouseButtonService('double-click') }
-                                >
-                                    Click duplo
-                                </Button>
-                                <Button
-                                    type='primary'
-                                    className={ styles.buttons_mouse }
-                                    onClick={ () => mouseButtonService('click-right') }
-                                >
-                                    Click direito
-                                </Button>
                             </div>
                         </div>
 

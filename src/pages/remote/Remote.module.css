@@ -37,6 +37,7 @@
 
 .buttons {
 	margin: 16px;
+	display: grid;
 }
 
 .screenshot_container {
@@ -50,4 +51,8 @@
     .input {
         width: 100%;
     }
+}
+
+.commands {
+	display: flex;
 }
