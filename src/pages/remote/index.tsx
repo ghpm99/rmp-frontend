@@ -139,14 +139,14 @@ function RemotePage(props) {
                                     <Button
                                         type='primary'
                                         className={ styles.buttons_mouse }
-                                        onClick={ () => mouseScrollService(10) }
+                                        onClick={ () => mouseScrollService(100) }
                                     >
                                         Scroll up
                                     </Button>
                                     <Button
                                         type='primary'
                                         className={ styles.buttons_mouse }
-                                        onClick={ () => mouseScrollService(-10) }
+                                        onClick={ () => mouseScrollService(-100) }
                                     >
                                         Scroll down
                                     </Button>
