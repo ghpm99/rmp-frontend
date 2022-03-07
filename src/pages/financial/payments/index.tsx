@@ -51,6 +51,10 @@ function FinancialPage() {
         }
         dispatch(saveNewPayment({ payment: newPayment }))
         closeModal('newPayment')
+        dispatch(fetchAllPayment({
+            active: true,
+            status: 0
+        }))
     }
 
     const headerTableFinancial = [
