@@ -59,6 +59,18 @@ function RemotePage(props) {
         }
     }
 
+    const onContextScreenshot = (event) => {
+
+        setScreenSize({
+            ...screenSize,
+            x: event.nativeEvent.offsetX,
+            y: event.nativeEvent.offsetY
+        })
+        mouseMoveService(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+
+        mouseButtonService('click-right')
+    }
+
     return (
         <Layout className={ styles.container }>
             <MenuCollapsible selected={ ['3'] } />
@@ -162,6 +174,7 @@ function RemotePage(props) {
                                     <img
                                         src={ hook.src }
                                         onClick={ onClickScreenshot }
+                                        onContextMenu={onContextScreenshot}
                                     />
                                 </div>
                             </div>
