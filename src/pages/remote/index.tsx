@@ -60,7 +60,7 @@ function RemotePage(props) {
     }
 
     const onContextScreenshot = (event) => {
-
+        event.preventDefault()
         setScreenSize({
             ...screenSize,
             x: event.nativeEvent.offsetX,
