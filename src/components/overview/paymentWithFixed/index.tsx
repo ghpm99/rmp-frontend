@@ -39,6 +39,10 @@ export default function PaymentWithFixed(props) {
 
     console.log('allPayments', allPayments)
 
+    props.data.closed.filter(payment => !allPayments.map(payments => payments.label).includes(payment.label)).forEach(payment => {
+        allPayments.push(payment)
+    })
+
     const options = {
         responsive: true,
         interaction: {
