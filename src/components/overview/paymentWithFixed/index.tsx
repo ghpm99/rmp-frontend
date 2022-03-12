@@ -113,6 +113,8 @@ export default function PaymentWithFixed(props) {
         },
     }
 
+    const valueDifWithFixed = allPayments.map((payment, index) => payment.credit - payment.debit )
+
     const data = {
         labels: allPayments.map(data => data.label),
         datasets: [
@@ -129,6 +131,18 @@ export default function PaymentWithFixed(props) {
                 backgroundColor: '#8200007f',
             },
             {
+                label: 'Diferença',
+                data: valueDifWithFixed,
+                borderColor: '#048200',
+                backgroundColor: '#04820073',
+            }
+        ],
+    }
+
+    const dataOpen = {
+        labels: allPayments.map(data => data.label),
+        datasets: [
+            {
                 label: 'Credito em aberto',
                 data: allPayments.map(data => data.openCredit),
                 borderColor: '#13109a',
@@ -139,7 +153,13 @@ export default function PaymentWithFixed(props) {
                 data: allPayments.map(data => data.openDebit),
                 borderColor: '#970e02)',
                 backgroundColor: '#970e027a',
-            },
+            }
+        ],
+    }
+
+    const dataClosed = {
+        labels: allPayments.map(data => data.label),
+        datasets: [
             {
                 label: 'Credito baixados',
                 data: allPayments.map(data => data.closedCredit),
@@ -151,7 +171,13 @@ export default function PaymentWithFixed(props) {
                 data: allPayments.map(data => data.closedDebit),
                 borderColor: '#ad1b04',
                 backgroundColor: '#ad1a0473',
-            },
+            }
+        ],
+    }
+
+    const dataFixed = {
+        labels: allPayments.map(data => data.label),
+        datasets: [
             {
                 label: 'Credito mensais',
                 data: allPayments.map(data => data.fixedCredit),
@@ -170,6 +196,9 @@ export default function PaymentWithFixed(props) {
     return (
         <>
             <Line data={ data } options={ options } width={ 400 } height={ 200 } />
+            <Line data={ dataOpen } options={ options } width={ 400 } height={ 200 } />
+            <Line data={ dataClosed } options={ options } width={ 400 } height={ 200 } />
+            <Line data={ dataFixed } options={ options } width={ 400 } height={ 200 } />
         </>
     )
 }
