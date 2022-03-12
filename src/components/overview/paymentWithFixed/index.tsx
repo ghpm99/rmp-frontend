@@ -63,7 +63,7 @@ export default function PaymentWithFixed(props) {
     })
 
     const calculatePaymentValue = (valueFixed, valueFixedOpen, valueClosed, valueOpen) => {
-        if(valueClosed == 0){
+        if (valueClosed == 0) {
             return valueFixed + valueOpen
         }
         const valueFixedClosed = valueFixed - valueFixedOpen
@@ -89,8 +89,6 @@ export default function PaymentWithFixed(props) {
         ),
     }))
 
-    console.log('allPayments ajustado', allPayments)
-
     const options = {
         responsive: true,
         interaction: {
@@ -113,7 +111,7 @@ export default function PaymentWithFixed(props) {
         },
     }
 
-    const valueDifWithFixed = allPayments.map((payment, index) => payment.credit - payment.debit )
+    const valueDifWithFixed = allPayments.map((payment, index) => payment.credit - payment.debit)
 
     const data = {
         labels: allPayments.map(data => data.label),
@@ -139,66 +137,7 @@ export default function PaymentWithFixed(props) {
         ],
     }
 
-    const dataOpen = {
-        labels: allPayments.map(data => data.label),
-        datasets: [
-            {
-                label: 'Credito em aberto',
-                data: allPayments.map(data => data.openCredit),
-                borderColor: '#13109a',
-                backgroundColor: '#12109a7b'
-            },
-            {
-                label: 'Debito em aberto',
-                data: allPayments.map(data => data.openDebit),
-                borderColor: '#970e02)',
-                backgroundColor: '#970e027a',
-            }
-        ],
-    }
-
-    const dataClosed = {
-        labels: allPayments.map(data => data.label),
-        datasets: [
-            {
-                label: 'Credito baixados',
-                data: allPayments.map(data => data.closedCredit),
-                borderColor: '#3226b3',
-                backgroundColor: '#3226b376',
-            },
-            {
-                label: 'Debitos baixados',
-                data: allPayments.map(data => data.closedDebit),
-                borderColor: '#ad1b04',
-                backgroundColor: '#ad1a0473',
-            }
-        ],
-    }
-
-    const dataFixed = {
-        labels: allPayments.map(data => data.label),
-        datasets: [
-            {
-                label: 'Credito mensais',
-                data: allPayments.map(data => data.fixedCredit),
-                borderColor: '#513dcd',
-                backgroundColor: '#503dcd78',
-            },
-            {
-                label: 'Debitos mensais',
-                data: allPayments.map(data => data.fixedDebit),
-                borderColor: '#c22906',
-                backgroundColor: '#c2280673',
-            },
-        ],
-    }
-
     return (
-        <>
-            <Line data={ data } options={ options } width={ 400 } height={ 200 } />
-            <Line data={ dataOpen } options={ options } width={ 400 } height={ 200 } />
-            <Line data={ dataClosed } options={ options } width={ 400 } height={ 200 } />
-            <Line data={ dataFixed } options={ options } width={ 400 } height={ 200 } />
-        </>
+        <Line data={ data } options={ options } width={ 400 } height={ 200 } />
     )
 }
