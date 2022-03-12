@@ -30,7 +30,7 @@ const initialState = {
 		open: [],
 		closed: [],
 		all: []
-	}
+	},
 }
 
 export const fetchAllPayment = createAsyncThunk(
@@ -70,7 +70,8 @@ export const financialSlice = createSlice({
 	initialState,
 	reducers: {
 		changeVisibleModal: (state, action) => {
-			state.payments.modal[action.payload.modal].visible = action.payload.visible
+			state.payments.modal[action.payload.modal].visible =
+				action.payload.visible
 		},
 		changeNamePaymentDetails: (state, action) => {
 			state.paymentDetail.data.name = action.payload
@@ -89,7 +90,7 @@ export const financialSlice = createSlice({
 		},
 		changeValuePaymentDetails: (state, action) => {
 			state.paymentDetail.data.value = action.payload
-		}
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -114,6 +115,7 @@ export const financialSlice = createSlice({
 				state.paymentReport.loading = true
 			})
 			.addCase(fetchPaymentReport.fulfilled, (state, action) => {
+
 				state.paymentReport.loading = false
 				state.paymentReport.open = action.payload.open
 				state.paymentReport.closed = action.payload.closed
@@ -129,7 +131,7 @@ export const {
 	changeFixedPaymentDetails,
 	changeActivePaymentDetails,
 	changePaymentDatePaymentDetails,
-	changeValuePaymentDetails
+	changeValuePaymentDetails,
 } = financialSlice.actions
 
 export default financialSlice.reducer
