@@ -28,7 +28,8 @@ const initialState = {
 	paymentReport: {
 		loading: true,
 		open: [],
-		closed: []
+		closed: [],
+		all: []
 	}
 }
 
@@ -116,6 +117,7 @@ export const financialSlice = createSlice({
 				state.paymentReport.loading = false
 				state.paymentReport.open = action.payload.open
 				state.paymentReport.closed = action.payload.closed
+				state.paymentReport.all = action.payload.all
 			})
 	},
 })

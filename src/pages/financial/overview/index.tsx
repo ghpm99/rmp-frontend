@@ -108,7 +108,7 @@ function Overview() {
     ],
   }
 
-  const optionsAll = {
+  const optionsOpen = {
     responsive: true,
     interaction: {
       mode: 'index' as const,
@@ -146,9 +146,9 @@ function Overview() {
     }
   })
 
-  const valueDifWithFixed = valueCreditWithFixed.map((credit, index) => credit - valueDebitWithFixed[index] )
+  const valueDifWithFixed = valueCreditWithFixed.map((credit, index) => credit - valueDebitWithFixed[index])
 
-  const dataAll = {
+  const dataOpen = {
     labels: financialStore.open.map(data => data.label),
     datasets: [
       {
@@ -212,6 +212,46 @@ function Overview() {
     ],
   }
 
+  const optionsAll = {
+    responsive: true,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Relatorio todos pagamentos',
+      },
+    },
+    scales: {
+      y: {
+        type: 'linear' as const,
+        display: true,
+        position: 'left' as const,
+      }
+    },
+  }
+
+  const dataAll = {
+    labels: financialStore.all.map(data => data.label),
+    datasets: [
+      {
+        label: 'Credito',
+        data: financialStore.all.map(data => data.credit),
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+      {
+        label: 'Debito',
+        data: financialStore.all.map(data => data.debit),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      }
+    ],
+  }
+
   return (
     <Layout className={ styles.container }>
       <MenuCollapsible selected={ ['sub2', 'overview'] } />
@@ -227,7 +267,8 @@ function Overview() {
           </Breadcrumb>
           <Layout>
             <Line data={ dataAll } options={ optionsAll } width={ 400 } height={ 200 } />
-            <Line data={dataClosed} options={optionsClosed} width={ 400 } height={ 200 } />
+            <Line data={ dataOpen } options={ optionsOpen } width={ 400 } height={ 200 } />
+            <Line data={ dataClosed } options={ optionsClosed } width={ 400 } height={ 200 } />
             <Line data={ data } options={ options } width={ 400 } height={ 200 } />
             <Bar data={ dataFixed } options={ optionsFixed } width={ 400 } height={ 200 } />
           </Layout>
