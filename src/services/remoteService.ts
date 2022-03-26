@@ -33,11 +33,20 @@ export async function keyPressService(keys) {
 }
 
 export async function mouseButtonService(button) {
-    const response = await apiRemote.post('mouseButton', {button: button})
-    return response.data
+	const response = await apiRemote.post('mouseButton', { button: button })
+	return response.data
 }
 
 export async function mouseScrollService(value) {
-	const response = await apiRemote.post('scroll', {value: value})
+	const response = await apiRemote.post('scroll', { value: value })
+	return response.data
+}
+
+export async function mouseMoveButtonService(x, y, button) {
+	const response = await apiRemote.post('mouseMoveButton', {
+		x: x,
+		y: y,
+		button: button,
+	})
 	return response.data
 }

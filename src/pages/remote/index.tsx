@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import LoadingPage from '../../components/loadingPage/Index';
 import LoginHeader from '../../components/loginHeader/Index';
 import MenuCollapsible from '../../components/menu/Index';
-import { hotkeyService, keyPressService, mouseButtonService, mouseMoveService, mouseScrollService, screenSizeService } from '../../services/remoteService';
+import { hotkeyService, keyPressService, mouseButtonService, mouseMoveButtonService, mouseMoveService, mouseScrollService, screenSizeService } from '../../services/remoteService';
 import styles from './Remote.module.css';
 import Pusher from 'react-pusher'
 
@@ -50,25 +50,24 @@ function RemotePage(props) {
             y: event.nativeEvent.offsetY
         })
 
-        mouseMoveService(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
-
         if (event.detail === 1) {
-            mouseButtonService('click')
+            mouseMoveButtonService(event.nativeEvent.offsetX, event.nativeEvent.offsetY, 'click')
         } else if (event.detail === 2) {
-            mouseButtonService('double-click')
+            mouseMoveButtonService(event.nativeEvent.offsetX, event.nativeEvent.offsetY, 'double-click')
         }
     }
 
     const onContextScreenshot = (event) => {
+
         event.preventDefault()
+
         setScreenSize({
             ...screenSize,
             x: event.nativeEvent.offsetX,
             y: event.nativeEvent.offsetY
         })
-        mouseMoveService(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
 
-        mouseButtonService('click-right')
+        mouseMoveButtonService(event.nativeEvent.offsetX, event.nativeEvent.offsetY, 'click-right')
     }
 
     return (
@@ -174,7 +173,7 @@ function RemotePage(props) {
                                     <img
                                         src={ hook.src }
                                         onClick={ onClickScreenshot }
-                                        onContextMenu={onContextScreenshot}
+                                        onContextMenu={ onContextScreenshot }
                                     />
                                 </div>
                             </div>
