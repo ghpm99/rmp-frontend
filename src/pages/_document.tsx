@@ -23,10 +23,6 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<title>Remote Media Player</title>
-				</Head>
-				<body>
-					<Main />
-					<NextScript />
 					<Script id='percevejo'>
 						{`
 							(function(p,e,r,c,v,j,o){
@@ -47,6 +43,10 @@ class MyDocument extends Document {
 								}
 						`}
 					</Script>
+				</Head>
+				<body>
+					<Main />
+					<NextScript />
 				</body>
 			</Html>
 		);
